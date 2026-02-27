@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "openai.api.key",
+      "type": "java.lang.String",
+      "description": "API key for OpenAI or OpenAI-compatible providers (e.g., DeepSeek in OpenAI mode)."
+    },
+    {
+      "name": "openai.model.name",
+      "type": "java.lang.String",
+      "description": "Model name used by the OpenAI-compatible chat endpoint (e.g., gpt-4o-mini, deepseek-chat)."
+    },
+    {
+      "name": "openai.base.url",
+      "type": "java.lang.String",
+      "description": "Base URL for the OpenAI-compatible API (https://api.openai.com/v1 or provider-specific)."
+    },
+    {
+      "name": "openai.temperature",
+      "type": "java.lang.Double",
+      "description": "Sampling temperature used by the chat model."
+    },
+    {
+      "name": "openai.max.tokens",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of output tokens for chat completions."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+# ========================================
+# APPLICATION INFO
+# ========================================
+spring.application.name=neurotask
+
+# ========================================
+# MYSQL DATABASE CONNECTION
+# ========================================
+# Configure seu banco MySQL local ou use Docker:
+# docker run --name mysql-neurotask -e MYSQL_ROOT_PASSWORD=senha123 -e MYSQL_DATABASE=neurotask -p 3307:3306 -d mysql:8.0
+spring.datasource.url=jdbc:mysql://localhost:3307/neurotask?createDatabaseIfNotExist=true&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=${DB_PASSWORD:senha123}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# ========================================
+# HIBERNATE/JPA CONFIGURATION
+# ========================================
+# 'update' cria tabelas automaticamente se não existirem
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+# ========================================
+# SPRING MAIL (E-MAIL DE VERIFICAÇÃO)
+# ========================================
+# Opcional: Configure para envio de e-mails de verificação
+# spring.mail.host=smtp.gmail.com
+# spring.mail.port=587
+# spring.mail.username=seu-email@gmail.com
+# spring.mail.password=${MAIL_PASSWORD:}
+# spring.mail.properties.mail.smtp.auth=true
+# spring.mail.properties.mail.smtp.starttls.enable=true
+
+# ========================================
+# OPENAI / OPENAI-COMPATIBLE AI CONFIGURATION
+# ========================================
+# Configure sua API key do Groq (gratuita) ou OpenAI
+# Obtenha em: https://console.groq.com
+openai.api.key=${OPENAI_API_KEY:}
+openai.model.name=llama-3.3-70b-versatile
+openai.base.url=https://api.groq.com/openai/v1
+openai.temperature=0.7
+openai.max.tokens=2048
+
+# ========================================
+# WEB PUSH (NOTIFICAÇÕES)
+# ========================================
+# Opcional: Configure chaves VAPID para notificações push
+# webpush.vapid.publicKey=
+# webpush.vapid.privateKey=

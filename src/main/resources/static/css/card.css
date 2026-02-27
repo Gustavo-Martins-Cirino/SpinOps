@@ -1,0 +1,33 @@
+/* Task card styling */
+
+.task-card {
+  position: relative;
+}
+
+.task-card .delete-btn {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.task-card:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.4) !important;
+  transform: scale(1.1);
+}
+
+/* Habit card standardization */
+.habit-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* Ensure time selection container is positioned at the base of the card */
+.habit-card .time-selection {
+  margin-top: auto;
+}

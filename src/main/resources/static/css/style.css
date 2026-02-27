@@ -1,0 +1,91 @@
+:root {
+  --base-font-size: 16px;
+}
+
+body {
+  font-size: var(--base-font-size);
+}
+
+/* Light mode separator styles */
+body.light-mode .calendar-timeline .hour-separator {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Modo Idoso - Acessibilidade */
+body.elderly-mode {
+  --base-font-size: 22px !important;
+  --bg-main: #ffffff !important;
+  --bg-sidebar: #ffffff !important;
+  --bg-card: #ffffff !important;
+  --text-primary: #000000 !important;
+  --text-secondary: #1a1a1a !important;
+  --border-color: #000000 !important;
+  --hover-bg: rgba(0, 0, 0, 0.08) !important;
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+body.elderly-mode .habits-menu,
+body.elderly-mode .dashboard,
+body.elderly-mode .advanced-stats {
+  display: none !important; /* Esconde recursos avançados */
+}
+
+body.elderly-mode #habitsView,
+body.elderly-mode #dashboardView,
+body.elderly-mode #statisticsView,
+body.elderly-mode .dashboard-charts,
+body.elderly-mode .stats-grid,
+body.elderly-mode .mini-dashboard,
+body.elderly-mode #miniDashboard {
+  display: none !important;
+}
+
+body.elderly-mode .nav-item[data-view="dashboard"],
+body.elderly-mode .nav-item[data-view="habits"] {
+  display: none !important;
+}
+
+body.elderly-mode .task-card {
+  font-size: 1.2em; /* Aumenta o tamanho dos botões e cards */
+  padding: 20px !important; /* Adiciona espaçamento interno */
+  margin: 10px 0 !important; /* Adiciona espaçamento vertical */
+  border: 2px solid #000; /* Contraste mais alto */
+  background-color: #f9f9f9; /* Fundo claro */
+  color: #000; /* Texto escuro */
+}
+
+body.elderly-mode button {
+  font-size: 1.2em; /* Aumenta o tamanho dos botões */
+  padding: 1em; /* Adiciona espaçamento interno */
+  border: 2px solid #000; /* Contraste mais alto */
+  background-color: #f9f9f9; /* Fundo claro */
+  color: #000; /* Texto escuro */
+}
+
+body.elderly-mode .toggle-switch {
+  width: 56px !important;
+  height: 30px !important;
+}
+
+body.elderly-mode .toggle-switch::after {
+  width: 24px !important;
+  height: 24px !important;
+  top: 3px !important;
+  left: 3px !important;
+}
+
+body.elderly-mode .toggle-switch.active::after {
+  left: 29px !important;
+}
+
+.elderly-mode .habits-timeline,
+.elderly-mode .dashboard-section {
+  display: none !important; /* Esconde elementos específicos */
+}
+
+body.elderly-mode .habits-section,
+body.elderly-mode .dashboard-container,
+body.elderly-mode .stats-card {
+  display: none !important;
+}

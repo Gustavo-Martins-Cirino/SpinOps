@@ -1,0 +1,65 @@
+/* Layout flexível para agenda 24h e dock de tarefas */
+
+/* Layout principal da agenda */
+.day-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: var(--background, #f8f9fa);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+  margin: 0;
+  padding: 0;
+}
+
+/* Cada slot de hora ocupa espaço igual */
+.hour-slot {
+  flex: 1 1 0;
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
+  min-height: 0;
+  background: #fff;
+  transition: background 0.2s;
+}
+.hour-slot:last-child {
+  border-bottom: none;
+}
+.hour-slot.drag-over {
+  background: #e3f2fd;
+}
+
+/* Dock de tarefas (sidebar ou topo) */
+#task-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f1f3f4;
+  border-radius: 8px;
+  padding: 12px;
+  min-width: 220px;
+  max-width: 300px;
+  box-shadow: 0 1px 4px #0001;
+  margin-bottom: 16px;
+}
+#task-dock .dock-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--primary-color, #1976d2);
+}
+.dock-task {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: grab;
+  transition: box-shadow 0.2s;
+}
+.dock-task:active {
+  cursor: grabbing;
+  box-shadow: 0 2px 8px #1976d233;
+}
