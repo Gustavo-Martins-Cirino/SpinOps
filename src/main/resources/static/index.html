@@ -7915,7 +7915,7 @@
               </span>
               <div style="display:flex;align-items:center;gap:8px;">
                 <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.12);color:#8b5cf6;font-weight:600;">Tópico 9</span>
-                <button onclick="renderModelMetricsCard()" title="Recalcular métricas" style="display:flex;align-items:center;gap:4px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#8b5cf6;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
+                <button onclick="renderModelMetricsCard(this)" title="Recalcular métricas" style="display:flex;align-items:center;gap:4px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);color:#8b5cf6;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;" onmouseover="this.style.background='rgba(139,92,246,0.2)'" onmouseout="this.style.background='rgba(139,92,246,0.1)'">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                   Recalcular
                 </button>
@@ -7937,6 +7937,77 @@
             </div>
             <div id="recommendationsBody" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;min-height:60px;">
               <span style="color:var(--text-secondary);font-size:13px;">Carregando recomendações...</span>
+            </div>
+          </div>
+
+          <!-- CLUSTERING — Tópico 10 (Aprendizado Não Supervisionado) -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                Agrupamento de OS — K-Means
+                <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(168,85,247,0.12);color:#a855f7;font-weight:600;">Tópico 10</span>
+              </span>
+              <button onclick="renderClusteringCard()" title="Re-agrupar" style="display:flex;align-items:center;gap:4px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3);color:#a855f7;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(168,85,247,0.2)'" onmouseout="this.style.background='rgba(168,85,247,0.1)'">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                Re-agrupar
+              </button>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;">Algoritmo K-Means agrupa OS por comportamento operacional semelhante sem usar rótulos pré-definidos.</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;">
+              <div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Dispersão dos Clusters</div>
+                <div style="position:relative;height:200px;"><canvas id="clusterScatterChart"></canvas></div>
+              </div>
+              <div id="clusterLegend" style="display:flex;flex-direction:column;gap:8px;padding-top:4px;">
+                <span style="color:var(--text-secondary);font-size:12px;">Calculando clusters...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SIMULAÇÃO INTELIGENTE — Tópico 11 -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Simulação de Cenários
+                <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(245,158,11,0.12);color:#f59e0b;font-weight:600;">Tópico 11</span>
+              </span>
+              <button onclick="runScenarioSimulation()" style="display:flex;align-items:center;gap:4px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(245,158,11,0.25)'" onmouseout="this.style.background='rgba(245,158,11,0.12)'">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Simular
+              </button>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;">Ajuste os parâmetros e compare como diferentes estratégias operacionais impactam os resultados futuros.</div>
+            <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start;">
+              <!-- Controles -->
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-primary);display:flex;justify-content:space-between;"><span>Melhoria de Eficiência</span><span id="simEficienciaVal" style="color:#f59e0b;">+10%</span></label>
+                  <input type="range" id="simEficiencia" min="-30" max="50" value="10" step="5" oninput="document.getElementById('simEficienciaVal').textContent=(this.value>0?'+':'')+this.value+'%'" style="width:100%;margin-top:4px;accent-color:#f59e0b;">
+                  <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Ganho na velocidade de conclusão de OS</div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-primary);display:flex;justify-content:space-between;"><span>Redução de OS Críticas</span><span id="simCriticasVal" style="color:#ef4444;">-20%</span></label>
+                  <input type="range" id="simCriticas" min="-80" max="30" value="-20" step="5" oninput="document.getElementById('simCriticasVal').textContent=(this.value>0?'+':'')+this.value+'%'" style="width:100%;margin-top:4px;accent-color:#ef4444;">
+                  <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Impacto na prevenção de falhas críticas</div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-primary);display:flex;justify-content:space-between;"><span>Volume de Novas OS / Semana</span><span id="simVolumeVal" style="color:#6366f1;">+0%</span></label>
+                  <input type="range" id="simVolume" min="-50" max="100" value="0" step="5" oninput="document.getElementById('simVolumeVal').textContent=(this.value>0?'+':'')+this.value+'%'" style="width:100%;margin-top:4px;accent-color:#6366f1;">
+                  <div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">Crescimento ou redução da demanda</div>
+                </div>
+                <div>
+                  <label style="font-size:12px;font-weight:600;color:var(--text-primary);display:flex;justify-content:space-between;"><span>Horizonte de Projeção</span><span id="simHorizVal" style="color:#10b981;">30 dias</span></label>
+                  <input type="range" id="simHoriz" min="7" max="90" value="30" step="7" oninput="document.getElementById('simHorizVal').textContent=this.value+' dias'" style="width:100%;margin-top:4px;accent-color:#10b981;">
+                </div>
+              </div>
+              <!-- Gráfico de resultado -->
+              <div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Comparativo de Cenários — Próximos <span id="simHorizLabel">30</span> dias</div>
+                <div style="position:relative;height:200px;"><canvas id="scenarioChart"></canvas></div>
+                <div id="scenarioSummary" style="margin-top:10px;font-size:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"></div>
+              </div>
             </div>
           </div>
 
@@ -19877,6 +19948,241 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         }
       }
 
+      // ===== CLUSTERING K-MEANS (Tópico 10 — Aprendizado Não Supervisionado) =====
+      let _clusterScatterChart = null;
+
+      function _kMeans(points, k, iterations) {
+        // Inicializa centroids com os primeiros k pontos distintos
+        let centroids = points.slice(0, k).map(p => [...p]);
+        let assignments = new Array(points.length).fill(0);
+        for (let iter = 0; iter < iterations; iter++) {
+          // Atribui cada ponto ao centroid mais próximo
+          for (let i = 0; i < points.length; i++) {
+            let minDist = Infinity, best = 0;
+            for (let c = 0; c < k; c++) {
+              const d = points[i].reduce((s, v, d) => s + (v - centroids[c][d]) ** 2, 0);
+              if (d < minDist) { minDist = d; best = c; }
+            }
+            assignments[i] = best;
+          }
+          // Recalcula centroids
+          const sums  = Array.from({length: k}, () => new Array(points[0].length).fill(0));
+          const counts = new Array(k).fill(0);
+          for (let i = 0; i < points.length; i++) {
+            points[i].forEach((v, d) => { sums[assignments[i]][d] += v; });
+            counts[assignments[i]]++;
+          }
+          for (let c = 0; c < k; c++) {
+            if (counts[c] > 0)
+              centroids[c] = sums[c].map(s => s / counts[c]);
+          }
+        }
+        return assignments;
+      }
+
+      function renderClusteringCard() {
+        const canvas = document.getElementById('clusterScatterChart');
+        const legend = document.getElementById('clusterLegend');
+        if (!canvas || !legend) return;
+
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : (window.tasks || []));
+        if (tasks.length < 3) {
+          legend.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">Cadastre pelo menos 3 OS para executar o agrupamento.</span>';
+          return;
+        }
+
+        // === Feature extraction ===
+        const prioMap = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
+        const statMap = { DONE: 0, LATE: 3, SCHEDULED: 1, IN_PROGRESS: 2 };
+        const now = Date.now();
+        const MS_DAY = 86400000;
+
+        const features = tasks.map(t => {
+          const prio   = prioMap[(t.priority || '').toUpperCase()] || 1;
+          const stat   = statMap[(t.status || '').toUpperCase()]   || 1;
+          const ageDays = t.createdAt ? Math.min((now - new Date(t.createdAt).getTime()) / MS_DAY, 60) : 15;
+          const hour   = t.startTime ? new Date(t.startTime).getHours() : 12;
+          return [prio, stat, ageDays / 60, hour / 24]; // normalizado [0,1] onde possível
+        });
+
+        const K = 3;
+        const assignments = _kMeans(features, K, 12);
+
+        // Mapeia para 2D (prio x idade) para scatter
+        const CLUSTER_COLORS = ['#a855f7','#0055FF','#f59e0b'];
+        const CLUSTER_LABELS = ['', '', ''];
+        // Nomeia clusters pelo perfil predominante
+        const profiles = Array.from({length: K}, () => ({ prio: 0, stat: 0, cnt: 0 }));
+        assignments.forEach((c, i) => {
+          profiles[c].prio += features[i][0];
+          profiles[c].stat += features[i][1];
+          profiles[c].cnt++;
+        });
+        const named = profiles.map((p, i) => {
+          if (p.cnt === 0) return { i, label: 'Grupo ' + (i + 1) };
+          const avgP = p.prio / p.cnt;
+          const avgS = p.stat / p.cnt;
+          let label = avgP >= 3 ? 'Alta Urgência' : avgP >= 2 ? 'Urgência Moderada' : 'Baixa Urgência';
+          if (avgS >= 2.5) label = 'Atrasadas / Críticas';
+          else if (avgS < 0.5) label = 'Concluídas';
+          return { i, label, cnt: p.cnt, avgP: avgP.toFixed(1), avgS: avgS.toFixed(1) };
+        });
+
+        const datasets = Array.from({length: K}, (_, c) => ({
+          label: named[c].label,
+          data: tasks
+            .map((t, i) => assignments[i] === c ? { x: features[i][0], y: features[i][2] * 60, title: t.title } : null)
+            .filter(Boolean),
+          backgroundColor: CLUSTER_COLORS[c] + 'cc',
+          pointRadius: 7, pointHoverRadius: 9,
+        }));
+
+        const isDark = document.body.classList.contains('dark-mode');
+        const gridC  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const fontC  = isDark ? '#aaa' : '#666';
+
+        if (_clusterScatterChart) { _clusterScatterChart.destroy(); _clusterScatterChart = null; }
+        try {
+          _clusterScatterChart = new Chart(canvas.getContext('2d'), {
+            type: 'scatter',
+            data: { datasets },
+            options: {
+              responsive: true, maintainAspectRatio: false, animation: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: {
+                  label: ctx => {
+                    const pt = ctx.raw;
+                    return (pt.title ? pt.title.slice(0,30) : '') + ' | Prio: ' + ctx.parsed.x.toFixed(1);
+                  }
+                }}
+              },
+              scales: {
+                x: { title: { display: true, text: 'Prioridade', color: fontC, font:{size:10} }, min: 0.5, max: 4.5, grid: { color: gridC }, ticks: { color: fontC, stepSize: 1, callback: v => ['','Baixa','Média','Alta','Crítica'][v]||v } },
+                y: { title: { display: true, text: 'Idade (dias)', color: fontC, font:{size:10} }, beginAtZero: true, grid: { color: gridC }, ticks: { color: fontC } },
+              }
+            }
+          });
+        } catch(e) { console.warn('cluster chart:', e); }
+
+        // Legenda dos clusters
+        legend.innerHTML = named.map((n, i) => '<div style="padding:10px 12px;border-radius:10px;background:' + CLUSTER_COLORS[i] + '18;border:1px solid ' + CLUSTER_COLORS[i] + '44;margin-bottom:4px;">'
+          + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">'
+          + '<span style="width:10px;height:10px;border-radius:50%;background:' + CLUSTER_COLORS[i] + ';flex-shrink:0;"></span>'
+          + '<span style="font-weight:700;font-size:12px;color:' + CLUSTER_COLORS[i] + ';">' + n.label + '</span>'
+          + '</div>'
+          + '<div style="font-size:11px;color:var(--text-secondary);">' + n.cnt + ' OS | Prio. média ' + n.avgP + ' | Status ' + n.avgS + '</div>'
+          + '</div>').join('');
+      }
+
+      // ===== SIMULAÇÃO INTELIGENTE DE CENÁRIOS (Tópico 11) =====
+      let _scenarioChart = null;
+
+      function runScenarioSimulation() {
+        const canvas = document.getElementById('scenarioChart');
+        const summary = document.getElementById('scenarioSummary');
+        const horizLabel = document.getElementById('simHorizLabel');
+        if (!canvas) return;
+
+        const efic  = Number(document.getElementById('simEficiencia')?.value  || 10)  / 100;  // ex: 0.10
+        const crit  = Number(document.getElementById('simCriticas')?.value    || -20) / 100;  // ex: -0.20
+        const vol   = Number(document.getElementById('simVolume')?.value      || 0)   / 100;  // ex: 0.00
+        const horiz = Number(document.getElementById('simHoriz')?.value       || 30);
+
+        if (horizLabel) horizLabel.textContent = horiz;
+
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : (window.tasks || []));
+        const total = tasks.length || 10;
+        const done  = tasks.filter(t => (t.status||'').toUpperCase() === 'DONE').length;
+        const baseRate = total > 0 ? done / total : 0.5; // taxa de conclusão base
+
+        // OS por semana (7 dias) pelos dados reais
+        const now = new Date(); now.setHours(0,0,0,0);
+        const weekTasks = tasks.filter(t => {
+          const d = t.createdAt ? new Date(t.createdAt) : null;
+          return d && (now - d) / 86400000 <= 7;
+        });
+        const baseWeeklyVolume = Math.max(weekTasks.length, 2); // OS novas por semana
+        const baseDailyVolume  = baseWeeklyVolume / 7;
+
+        // Gera projeção acumulada de OS abertas (pendentes) para cada cenário
+        function project(rateBonus, volumeBonus) {
+          let pending = Math.max(0, total - done);
+          const vals = [pending];
+          for (let d = 1; d <= horiz; d++) {
+            const newOS = baseDailyVolume * (1 + volumeBonus);
+            const closedOS = pending * Math.max(0, Math.min(0.8, baseRate + rateBonus));
+            pending = Math.max(0, pending + newOS - closedOS);
+            vals.push(Math.round(pending));
+          }
+          return vals;
+        }
+
+        const labels = Array.from({length: horiz + 1}, (_, i) => i === 0 ? 'Hoje' : 'D+' + i);
+        const baseline  = project(0,             0);
+        const optimized = project(efic,          crit);
+        const pessimist = project(efic * -0.5,   vol > 0 ? vol : Math.abs(crit) * 0.5);
+
+        const isDark = document.body.classList.contains('dark-mode');
+        const gridC  = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const fontC  = isDark ? '#aaa' : '#666';
+
+        if (_scenarioChart) { _scenarioChart.destroy(); _scenarioChart = null; }
+        try {
+          _scenarioChart = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                { label: 'Atual',      data: baseline,  borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.07)', borderDash:[],  tension: 0.3, fill: false, pointRadius: 0 },
+                { label: 'Otimizado',  data: optimized, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.07)', borderDash:[],  tension: 0.3, fill: false, pointRadius: 0 },
+                { label: 'Pessimista', data: pessimist, borderColor: '#ef4444', backgroundColor: 'rgba(239,68,68,0.07)',   borderDash:[6,3], tension: 0.3, fill: false, pointRadius: 0 },
+              ]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false, animation: { duration: 400 },
+              plugins: {
+                legend: { position: 'top', labels: { color: fontC, font: { size: 11 }, boxWidth: 14 } },
+                tooltip: { mode: 'index', intersect: false }
+              },
+              scales: {
+                x: { grid: { color: gridC }, ticks: { color: fontC, maxTicksLimit: 8, font:{size:9} } },
+                y: { beginAtZero: true, title:{ display:true, text:'OS Pendentes', color: fontC, font:{size:10} }, grid: { color: gridC }, ticks: { color: fontC, precision:0 } }
+              }
+            }
+          });
+        } catch(e) { console.warn('scenario chart:', e); }
+
+        // KPI summary
+        if (summary) {
+          const fmt = (arr, color) => {
+            const last = arr[arr.length - 1];
+            const delta = last - arr[0];
+            const sign  = delta >= 0 ? '+' : '';
+            return '<div style="padding:10px;border-radius:8px;background:' + color + '18;border:1px solid ' + color + '44;text-align:center;">'
+              + '<div style="font-size:18px;font-weight:800;color:' + color + ';">' + last + '</div>'
+              + '<div style="font-size:10px;color:var(--text-secondary);">OS pendentes</div>'
+              + '<div style="font-size:11px;font-weight:600;color:' + color + ';">' + sign + delta + ' vs hoje</div>'
+              + '</div>';
+          };
+          summary.innerHTML = fmt(baseline, '#6366f1') + fmt(optimized, '#10b981') + fmt(pessimist, '#ef4444');
+          summary.insertAdjacentHTML('afterbegin', '');
+          // Adicionar labels acima
+          summary.innerHTML =
+            '<div style="font-size:10px;font-weight:600;color:#6366f1;text-align:center;">ATUAL</div>'
+            + '<div style="font-size:10px;font-weight:600;color:#10b981;text-align:center;">OTIMIZADO</div>'
+            + '<div style="font-size:10px;font-weight:600;color:#ef4444;text-align:center;">PESSIMISTA</div>'
+            + fmt(baseline, '#6366f1') + fmt(optimized, '#10b981') + fmt(pessimist, '#ef4444');
+        }
+      }
+
+      // Sincroniza label do horizonte com o slider ao carregar
+      (function() {
+        const sl = document.getElementById('simHoriz');
+        const lbl = document.getElementById('simHorizLabel');
+        if (sl && lbl) sl.addEventListener('input', () => { lbl.textContent = sl.value; });
+      })();
+
       // ===== MÉTRICAS DO MODELO IA (Tópico 9 — Aprendizado Supervisionado) =====
 
       const REC_HIST_KEY = 'spinops.rec_history';
@@ -19884,9 +20190,20 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
       function saveRecHistory(h)  { try { localStorage.setItem(REC_HIST_KEY, JSON.stringify(h)); } catch {} }
       function clearRecHistory()  { try { localStorage.removeItem(REC_HIST_KEY); } catch {} renderRecommendationsCard().catch(() => {}); }
 
-      function renderModelMetricsCard() {
+      function renderModelMetricsCard(btnEl) {
         const body = document.getElementById('modelMetricsBody');
         if (!body) return;
+
+        // Feedback visual no botão
+        const _origBtn = btnEl ? btnEl.innerHTML : null;
+        if (btnEl) {
+          btnEl.disabled = true;
+          btnEl.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> Calculando...';
+        }
+        body.innerHTML = '<span style="color:var(--text-secondary);font-size:13px;">Calculando métricas...</span>';
+
+        setTimeout(() => {
+        try {
         const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
         const allOpen = tasks.filter(t => (t.status || '').toUpperCase() !== 'DONE');
 
@@ -19957,38 +20274,41 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           <div style="padding:14px;border-radius:10px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.18);">
             <div style="font-size:12px;font-weight:700;color:#8b5cf6;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-              Classificação
-              <span style="font-size:9px;background:rgba(139,92,246,0.15);padding:1px 6px;border-radius:4px;font-weight:600;">K-Keyword</span>
+              Acerto das Categorias
+              <span style="font-size:9px;background:rgba(139,92,246,0.15);padding:1px 6px;border-radius:4px;font-weight:600;">Por palavras-chave</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;">
-              ${metric('Precisão',  precVal, pC, 'Acurácia das predições positivas')}
-              ${metric('Recall',    recVal,  rC, 'Cobertura das classes reais')}
-              ${metric('F1-Score',  f1Val,   fC, 'Média harmônica precisão × recall')}
+              ${metric('Precisão',  precVal, pC, 'Das categorias que o sistema previu, quantas estavam certas')}
+              ${metric('Cobertura', recVal,  rC, 'Das OS reais de cada tipo, quantas o sistema identificou')}
+              ${metric('Nota Geral (F1)', f1Val, fC, 'Equilíbrio entre precisão e cobertura — quanto maior, melhor')}
             </div>
             <div style="margin-top:10px;padding:7px 9px;border-radius:7px;background:var(--bg-secondary);font-size:10px;color:var(--text-secondary);">
-              <b>Dados:</b> ${labelNote} · ${allOpen.length} OS abertas analisadas
+              <b>Base:</b> ${labelNote} · ${allOpen.length} OS abertas analisadas
             </div>
           </div>
           <div style="padding:14px;border-radius:10px;background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.18);">
             <div style="font-size:12px;font-weight:700;color:#6366f1;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-              Previsão
-              <span style="font-size:9px;background:rgba(99,102,241,0.15);padding:1px 6px;border-radius:4px;font-weight:600;">Regressão Linear</span>
+              Previsão de Volume de OS
+              <span style="font-size:9px;background:rgba(99,102,241,0.15);padding:1px 6px;border-radius:4px;font-weight:600;">Por tendência</span>
             </div>
             <div style="display:flex;flex-direction:column;gap:12px;">
               <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                <span style="font-size:11px;color:var(--text-secondary);">MAE (Erro Médio Absoluto)</span>
+                <span style="font-size:11px;color:var(--text-secondary);">Erro de previsão (OS/dia)</span>
                 <span style="font-size:22px;font-weight:800;color:#6366f1;">${mae}</span>
               </div>
-              <span style="font-size:10px;color:var(--text-secondary);margin-top:-6px;">OS/dia de erro médio nos últimos 7 dias</span>
+              <span style="font-size:10px;color:var(--text-secondary);margin-top:-6px;">Diferença média entre o previsto e o real nos últimos 7 dias</span>
               <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:7px;">
-                <span style="font-size:11px;color:var(--text-secondary);">Tendência detectada</span>
+                <span style="font-size:11px;color:var(--text-secondary);">Tendência atual</span>
                 <span style="font-size:12px;font-weight:700;color:${tCol};">${trend}</span>
               </div>
-              <span style="font-size:10px;color:var(--text-secondary);">Janela: 14 dias históricos · ${n} amostras</span>
+              <span style="font-size:10px;color:var(--text-secondary);">Analisando os últimos 14 dias · ${n} registros</span>
             </div>
           </div>
         </div>`;
+        } catch(e) { body.innerHTML = '<span style="color:#ef4444;font-size:13px;">Erro ao calcular métricas. Tente novamente.</span>'; console.warn('model metrics:', e); }
+        if (btnEl) { btnEl.disabled = false; btnEl.innerHTML = _origBtn; }
+        }, 150);
       }
 
       // ===== RECOMENDAÇÕES DE OTIMIZAÇÃO (Ponto 6) =====
@@ -20845,6 +21165,8 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
             renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
             try { renderExecutiveSummary(); } catch(e) { console.warn('executive summary:', e); }
             try { renderModelMetricsCard(); } catch(e) { console.warn('model metrics:', e); }
+            try { renderClusteringCard(); } catch(e) { console.warn('clustering:', e); }
+            try { runScenarioSimulation(); } catch(e) { console.warn('scenario:', e); }
           });
         } catch (error) {
           console.error("Erro ao carregar estatísticas:", error);
@@ -20975,6 +21297,8 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
         renderClassificationCard().catch(e => console.warn('classification:', e));
         renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
         try { renderModelMetricsCard(); } catch(e) { console.warn('model metrics:', e); }
+        try { renderClusteringCard(); } catch(e) { console.warn('clustering:', e); }
+        try { runScenarioSimulation(); } catch(e) { console.warn('scenario:', e); }
         const mv = document.getElementById('maintenanceView');
         if (mv && mv.classList.contains('active')) loadMaintenanceView();
         closeMaintCalendar();
@@ -22828,6 +23152,8 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
               renderPriorityChart().catch(e => console.warn('priority chart:', e));
               renderClassificationCard().catch(e => console.warn('classification:', e));
               renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
+              try { renderClusteringCard(); } catch(e) { console.warn('clustering:', e); }
+              try { runScenarioSimulation(); } catch(e) { console.warn('scenario:', e); }
             });
             setTimeout(() => {
               try { renderProductivityChart(); } catch(e) { console.warn('prod chart:', e); }
@@ -22843,6 +23169,8 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
               renderPriorityChart().catch(e => console.warn('priority chart:', e));
               renderClassificationCard().catch(e => console.warn('classification:', e));
               renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
+              try { renderClusteringCard(); } catch(e) { console.warn('clustering:', e); }
+              try { runScenarioSimulation(); } catch(e) { console.warn('scenario:', e); }
             }, 500);
           }
           if (viewName === 'equipment') {
