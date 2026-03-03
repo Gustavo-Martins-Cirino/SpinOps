@@ -25,6 +25,7 @@ public class Task {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    @Column(columnDefinition = "VARCHAR(20)")
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
@@ -32,6 +33,9 @@ public class Task {
     private TaskStatus status;
 
     private LocalDateTime createdAt;
+
+    /** Momento em que a tarefa foi marcada como DONE. Preenchido por TaskService.markAsDone(). */
+    private LocalDateTime completedAt;
 
     @Column(length = 20)
     private String color;
@@ -139,6 +143,14 @@ public class Task {
 
     public String getColor() {
         return color;
+    }
+
+    public LocalDateTime getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(LocalDateTime completedAt) {
+        this.completedAt = completedAt;
     }
 
     public void setColor(String color) {

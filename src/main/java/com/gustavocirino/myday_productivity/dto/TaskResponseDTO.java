@@ -21,8 +21,9 @@ public record TaskResponseDTO(
         RiskLevel riskLevel,
         LocalDateTime predictedFailureDate,
         Double failureProbability,
-        String aiAnalysisSummary) {
+        String aiAnalysisSummary,
+        LocalDateTime completedAt) {
     public TaskResponseDTO(Long id, String title, String description, TaskPriority priority, TaskStatus status, LocalDateTime startTime, LocalDateTime endTime, LocalDateTime createdAt, String color) {
-        this(id, title, description, priority, status, startTime, endTime, createdAt, color, null, null, null, RiskLevel.SAFE, null, 0.0, null);
+        this(id, title, description, priority, status, startTime, endTime, createdAt, color, null, null, null, RiskLevel.SAFE, null, 0.0, null, null);
     }
 }

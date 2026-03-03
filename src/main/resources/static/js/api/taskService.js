@@ -308,4 +308,129 @@ export const taskService = {
     }
     return response.json();
   },
+
+  /**
+   * GET /api/analytics/status - Distribuição de OS por status
+   */
+  async getStatusDistribution() {
+    const response = await fetchWithRetry(`${API_BASE}/analytics/status`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error("Erro ao buscar distribuição de status");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/hourly - Distribuição de OS por hora do dia (0-23)
+   */
+  async getHourlyDistribution() {
+    const response = await fetchWithRetry(`${API_BASE}/analytics/hourly`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error("Erro ao buscar distribuição por hora");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/tags - Distribuição de OS por tag/categoria
+   */
+  async getTagDistribution() {
+    const response = await fetchWithRetry(`${API_BASE}/analytics/tags`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error("Erro ao buscar distribuição por tag");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/trend?days=N - Série temporal diária (criadas vs concluídas)
+   */
+  async getDailyTrend(days = 14) {
+    const response = await fetchWithRetry(`${API_BASE}/analytics/trend?days=${days}`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error("Erro ao buscar tendência diária");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/forecast - Previsão de produtividade por regressão linear
+   * @param {number} historicDays - Dias históricos para o modelo (padrão: 14)
+   * @param {number} horizon - Dias à frente a projetar (padrão: 7)
+   */
+  async getForecast(historicDays = 14, horizon = 7) {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/forecast?historicDays=${historicDays}&horizon=${horizon}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao buscar previsão de produtividade");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/anomalies - Detecção de anomalias de produtividade
+   * @param {number} days - Janela de análise em dias (padrão: 30)
+   */
+  async getAnomalies(days = 30) {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/anomalies?days=${days}`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao buscar anomalias");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/correlation - Correlações operacionais
+   */
+  async getCorrelation() {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/correlation`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao buscar correlações");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/insights - Resumo executivo gerado por IA
+   * Retorna: { narrative: "texto" }
+   */
+  async getInsights() {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/insights`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao buscar insights");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/classify - Classificação automática de OS por categoria técnica
+   * Retorna: [{ taskId, title, category, confidence }, ...]
+   */
+  async classifyTasks() {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/classify`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao classificar OS");
+    return response.json();
+  },
+
+  /**
+   * GET /api/analytics/recommendations - Recomendações estruturadas de otimização via IA
+   * Retorna: [{ action, impact, priority, category }, ...]
+   */
+  async getRecommendations() {
+    const response = await fetchWithRetry(
+      `${API_BASE}/analytics/recommendations`,
+      { headers: getAuthHeaders() }
+    );
+    if (!response.ok) throw new Error("Erro ao buscar recomendações");
+    return response.json();
+  },
 };
+
+// Expõe globalmente para scripts inline que não são módulos ES
+window.taskService = taskService;

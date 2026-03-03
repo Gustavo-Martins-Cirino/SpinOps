@@ -1565,8 +1565,8 @@
       }
 
       .todo-priority-dot[data-priority="HIGH"] {
-        border-color: #ea4335;
-        background: #ea4335;
+        border-color: #f59e0b;
+        background: #f59e0b;
       }
 
       .todo-priority-dot[data-priority="MEDIUM"] {
@@ -1577,6 +1577,26 @@
       .todo-priority-dot[data-priority="LOW"] {
         border-color: #34a853;
         background: #34a853;
+      }
+
+      .todo-priority-dot[data-priority="CRITICAL"] {
+        border-color: #dc2626;
+        background: #dc2626;
+      }
+
+      @keyframes criticalPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.8); }
+        55%       { box-shadow: 0 0 0 6px rgba(220,38,38,0); }
+      }
+
+      .priority-chip[data-priority="CRITICAL"] svg {
+        filter: drop-shadow(0 0 3px #dc2626);
+      }
+
+      .priority-chip[data-priority="CRITICAL"].selected {
+        background: rgba(220,38,38,0.15) !important;
+        border: 1px solid #dc2626 !important;
+        color: #dc2626 !important;
       }
 
       .todo-drag-handle {
@@ -3277,6 +3297,41 @@
         font-size: 14px;
         font-family: "Roboto", sans-serif;
         transition: all 0.2s;
+        color-scheme: dark;
+      }
+
+      .light-mode .details-edit-select {
+        color-scheme: light;
+      }
+
+      /* Seletor de prioridade customizado no To-Do */
+      .todo-priority-select {
+        font-size: 12px;
+        padding: 4px 26px 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-card);
+        color: var(--text-primary);
+        cursor: pointer;
+        height: 32px;
+        appearance: none;
+        -webkit-appearance: none;
+        font-family: "Roboto", sans-serif;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 6px center;
+        background-size: 14px 14px;
+        border-left: 3px solid #fbbc04;
+        outline: none;
+        color-scheme: dark;
+      }
+      .light-mode .todo-priority-select {
+        color-scheme: light;
+      }
+      .todo-priority-select:focus {
+        border-color: var(--google-blue);
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.12);
       }
 
       .details-edit-input:focus,
@@ -5244,6 +5299,14 @@
       @keyframes critical-pulse {
         0%, 100% { box-shadow: 0 0 6px rgba(255, 0, 0, 0.35); }
         50%       { box-shadow: 0 0 16px rgba(255, 0, 0, 0.7); }
+      }
+      @keyframes anomaly-badge-blink {
+        0%, 100% { opacity: 1; transform: scale(1);   box-shadow: 0 0 0 0   rgba(239,68,68,0.8); }
+        50%       { opacity: 0.85; transform: scale(1.14); box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+      }
+      .anomaly-badge-pulse {
+        animation: anomaly-badge-blink 1s ease-in-out infinite;
+        border-radius: 12px;
       }
 
       .agenda-time {
@@ -7499,7 +7562,7 @@
               id="todoAddInput"
               class="todo-add-input"
               type="text"
-              placeholder="Adicionar uma tarefa"
+              placeholder="Adicionar uma OS"
               autocomplete="off"
             />
             <button class="todo-add-btn" type="button" onclick="addTodoTask()">
@@ -7588,11 +7651,52 @@
         <div class="ind-kpi-grid" id="taskSummary">
         </div>
 
+        <!-- RESUMO EXECUTIVO IA -->
+        <div id="executiveSummaryCard" style="display:none;margin-bottom:20px;padding:18px 22px;background:linear-gradient(135deg,rgba(99,102,241,0.08) 0%,rgba(139,92,246,0.06) 100%);border:1px solid rgba(99,102,241,0.25);border-left:4px solid #6366f1;border-radius:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              <span style="font-size:13px;font-weight:700;color:var(--text-primary);">Resumo Executivo — Inteligência Operacional</span>
+            </div>
+            <span id="execSummarySource" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(99,102,241,0.15);color:#6366f1;font-weight:600;">Calculando...</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;">
+            <div id="execHealthScore" style="padding:14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border-color);text-align:center;">
+              <div style="font-size:28px;font-weight:800;" id="execScoreVal">—</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Score de Saúde Operacional</div>
+              <div id="execScoreBar" style="margin-top:8px;height:6px;border-radius:3px;background:var(--border-color);overflow:hidden;"><div id="execScoreBarFill" style="height:100%;border-radius:3px;background:#10b981;width:0%;transition:width 0.8s ease;"></div></div>
+            </div>
+            <div id="execTopAlert" style="padding:14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border-color);">
+              <div style="font-size:10px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Principal Alerta</div>
+              <div id="execTopAlertText" style="font-size:12px;font-weight:600;color:var(--text-primary);line-height:1.5;">Analisando...</div>
+              <div id="execTopAlertSub" style="font-size:11px;color:var(--text-secondary);margin-top:4px;"></div>
+            </div>
+            <div id="execTopRec" style="padding:14px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border-color);">
+              <div style="font-size:10px;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Ação Prioritária Recomendada</div>
+              <div id="execTopRecText" style="font-size:12px;font-weight:600;color:var(--text-primary);line-height:1.5;">Gerando...</div>
+              <div id="execTopRecCategory" style="font-size:11px;color:#6366f1;margin-top:4px;font-weight:600;"></div>
+            </div>
+          </div>
+        </div>
+
         <!-- Card equipamento crítico da semana -->
         <div id="critEquipCard" style="display:none; margin-bottom:20px; padding:16px 20px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.35); border-left:4px solid #ef4444; border-radius:8px;">
           <div style="font-size:12px; font-weight:600; color:#ef4444; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px;">⚡ Equipamento em Alerta</div>
           <div id="critEquipName" style="font-size:16px; font-weight:700; color:var(--text-primary);"></div>
           <div id="critEquipDetail" style="font-size:13px; color:var(--text-secondary); margin-top:2px;"></div>
+        </div>
+
+        <!-- BANNER: OS CRÍTICAS ABERTAS -->
+        <div id="criticalOsBanner" style="display:none;margin-bottom:20px;padding:14px 18px;background:rgba(220,38,38,0.1);border:1.5px solid rgba(220,38,38,0.5);border-left:5px solid #dc2626;border-radius:10px;animation:criticalPulse 1.2s ease-in-out infinite;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(220,38,38,0.15);flex-shrink:0;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span style="font-size:12px;font-weight:800;color:#dc2626;text-transform:uppercase;letter-spacing:.06em;">OS Críticas Abertas</span>
+            <span id="criticalOsCount" style="background:#dc2626;color:#fff;font-size:11px;font-weight:800;padding:1px 8px;border-radius:20px;"></span>
+          </div>
+          <div id="criticalOsList" style="font-size:12px;color:var(--text-primary);display:flex;flex-wrap:wrap;gap:6px;"></div>
+          <div style="margin-top:8px;font-size:11px;color:#dc2626;">Intervença imediata necessária — acesse a aba Ordens de Serviço para tratar.</div>
         </div>
 
         <!-- OS Summary mini -->
@@ -7649,6 +7753,172 @@
               <canvas id="riskMatrixChart"></canvas>
             </div>
           </div>
+
+          <!-- DISTRIBUIÇÃO POR STATUS (Donut) -->
+          <div class="chart-container ind-chart-card">
+            <h3 class="ind-chart-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Status das OS
+              <span class="ind-chart-badge" style="background:rgba(245,158,11,0.15); color:#f59e0b;">DISTRIBUIÇÃO</span>
+            </h3>
+            <div style="position:relative; height:220px; display:flex; align-items:center; justify-content:center;">
+              <canvas id="statusChart"></canvas>
+            </div>
+            <div id="statusChartLegend" style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:8px; font-size:11px; color:var(--text-secondary);"></div>
+          </div>
+
+          <!-- PADRÃO DE ABERTURA POR HORA DO DIA (Heatmap bar) -->
+          <div class="chart-container ind-chart-card">
+            <h3 class="ind-chart-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01M12 12h.01"/></svg>
+              OS por Hora do Dia
+              <span class="ind-chart-badge" style="background:rgba(16,185,129,0.15); color:#10b981;">PADRÃO OPERACIONAL</span>
+            </h3>
+            <div style="position:relative; height:220px;">
+              <canvas id="hourlyChart"></canvas>
+            </div>
+            <div style="font-size:11px; color:var(--text-secondary); margin-top:6px; text-align:center;" id="hourlyChartPeak"></div>
+          </div>
+
+          <!-- ANÁLISE IA: PADRÕES E INSIGHTS -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <h3 class="ind-chart-title" style="margin:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0055FF" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Análise de Padrões — IA
+                <span class="ind-chart-badge" style="background:rgba(0,85,255,0.15); color:#0055FF;">IA</span>
+              </h3>
+              <button class="equip-ai-btn" onclick="loadAIInsightsPanel()" id="aiInsightsPanelBtn" style="margin:0; padding:6px 14px; font-size:12px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                Analisar Padrões
+              </button>
+            </div>
+            <div id="aiInsightsPanel" style="min-height:80px;">
+              <div style="color:var(--text-secondary); font-size:13px; text-align:center; padding:20px 0;">
+                Clique em <b>Analisar Padrões</b> para que a IA identifique correlações e insights operacionais.
+              </div>
+            </div>
+          </div>
+
+          <!-- PREVISÃO DE PRODUTIVIDADE (FORECAST) -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <h3 class="ind-chart-title" style="margin:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Previsão de Produtividade
+                <span class="ind-chart-badge" style="background:rgba(16,185,129,0.15); color:#10b981;">Forecast</span>
+              </h3>
+              <div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--text-secondary);">
+                <span id="forecastTrendBadge" style="padding:3px 10px;border-radius:20px;font-weight:600;"></span>
+                <span>Histórico: <b id="forecastHistDays">14</b>d &nbsp;|&nbsp; Horizonte: <b id="forecastHorizon">7</b>d</span>
+              </div>
+            </div>
+            <div style="position:relative; height:220px;">
+              <canvas id="forecastChart"></canvas>
+            </div>
+            <div style="display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px;color:var(--text-secondary);flex-wrap:wrap;">
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#10b981;display:inline-block;border-radius:2px;"></span> Histórico (concluídas)</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#0055FF;display:inline-block;border-radius:2px;border:1px dashed #0055FF;"></span> Projeção</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:rgba(245,158,11,0.8);display:inline-block;border-radius:2px;"></span> Linha do modelo</span>
+            </div>
+          </div>
+
+          <!-- PREVISÃO DE FALHAS DE EQUIPAMENTOS -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <h3 class="ind-chart-title" style="margin:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Previsão de Falhas — Equipamentos
+                <span class="ind-chart-badge" style="background:rgba(239,68,68,0.15); color:#ef4444;">Risco</span>
+              </h3>
+              <span style="font-size:11px;color:var(--text-secondary);">Saúde atual × falha estimada</span>
+            </div>
+            <div style="position:relative; height:220px;">
+              <canvas id="equipFailureChart"></canvas>
+            </div>
+            <div id="equipFailureLegend" style="margin-top:8px;font-size:11px;color:var(--text-secondary);text-align:center;"></div>
+          </div>
+
+          <!-- ANOMALY PANEL CARD -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-weight:600;font-size:13px;">Anomalias Detectadas</span>
+              <span id="anomalyCount" style="font-size:11px;padding:2px 8px;border-radius:12px;background:#ef4444;color:#fff;font-weight:700;">0</span>
+            </div>
+            <div id="anomalyPanel" style="max-height:260px;overflow-y:auto;"></div>
+            <span style="font-size:11px;color:var(--text-secondary);">Últimos 30 dias — análise por LLM (GROQ)</span>
+          </div>
+
+          <!-- CORRELAÇÃO CARD -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="margin-bottom:8px;">
+              <span style="font-weight:600;font-size:13px;">Análise de Correlações</span>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">Padrões operacionais explícitos</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+              <div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Conclusões vs. Atrasos por Dia da Semana</div>
+                <div style="position:relative;height:160px;"><canvas id="correlationDOWChart"></canvas></div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Conclusões vs. Atrasos por Prioridade</div>
+                <div style="position:relative;height:160px;"><canvas id="correlationPrioChart"></canvas></div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;">Distribuição de OS por Prioridade</div>
+                <div style="position:relative;height:160px;"><canvas id="priorityDistChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INSIGHTS IA CARD -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                Análise Inteligente — Insights IA
+              </span>
+              <span data-insights-badge style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.12);color:#8b5cf6;font-weight:600;">GROQ</span>
+            </div>
+            <div id="insightsNarrative" style="font-size:13px;line-height:1.75;color:var(--text-primary);padding:14px 16px;border-radius:8px;background:color-mix(in srgb,#8b5cf6 8%,transparent);border-left:4px solid #8b5cf6;min-height:56px;">
+              <span style="color:var(--text-secondary);">Carregando análise...</span>
+            </div>
+          </div>
+
+          <!-- CLASSIFICAÇÃO AUTOMÁTICA DE OS (Ponto 5 — Classificação) -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                Classificação Automática de OS
+              </span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="classifSourceBadge" style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(6,182,212,0.12);color:#06b6d4;font-weight:600;">IA</span>
+                <button onclick="renderClassificationCard()" title="Reclassificar com IA" style="display:flex;align-items:center;gap:4px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);color:#06b6d4;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;" onmouseover="this.style.background='rgba(6,182,212,0.2)'" onmouseout="this.style.background='rgba(6,182,212,0.1)'">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  Reclassificar
+                </button>
+              </div>
+            </div>
+            <div id="classificationBody" style="overflow-x:auto;">
+              <span style="color:var(--text-secondary);font-size:13px;">Carregando classificações...</span>
+            </div>
+          </div>
+
+          <!-- RECOMENDAÇÕES DE OTIMIZAÇÃO (Ponto 6 — Otimização) -->
+          <div class="chart-container ind-chart-card" style="grid-column: span 2;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                Recomendações de Otimização Operacional
+              </span>
+              <span data-rec-badge style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(16,185,129,0.12);color:#10b981;font-weight:600;">GROQ</span>
+            </div>
+            <div id="recommendationsBody" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;min-height:60px;">
+              <span style="color:var(--text-secondary);font-size:13px;">Carregando recomendações...</span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -7939,12 +8209,12 @@
     >
       <div class="task-modal" id="taskModal">
         <div class="modal-header">
-         !-- Inputs invisíveis: impedem o Edge/Chrome de detectar e salvar como senha -->
-        <input type="text" name="_uid_x9z" tabindex="-1" aria-hidden="true" autocomplete="username"
-          style="opacity:0;position:absolute;pointer-events:none;height:0;width:0;overflow:hidden;">
-        <input type="password" name="_pwd_x9z" tabindex="-1" aria-hidden="true" autocomplete="new-password"
-          style="opacity:0;position:absolute;pointer-events:none;height:0;width:0;overflow:hidden;">
-        < <input
+          <!-- Inputs invisíveis: impedem o Edge/Chrome de detectar e salvar como senha -->
+          <input type="text" name="_uid_x9z" tabindex="-1" aria-hidden="true" autocomplete="username"
+            style="opacity:0;position:absolute;pointer-events:none;height:0;width:0;overflow:hidden;">
+          <input type="password" name="_pwd_x9z" tabindex="-1" aria-hidden="true" autocomplete="new-password"
+            style="opacity:0;position:absolute;pointer-events:none;height:0;width:0;overflow:hidden;">
+          <input
             type="text"
             class="modal-title"
             id="task-title-unique"
@@ -8050,10 +8320,20 @@
                 <div class="priority-options">
                   <div
                     class="priority-chip"
+                    data-priority="CRITICAL"
+                    onclick="selectPriority('CRITICAL')"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#dc2626" stroke="none">
+                      <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                    Crítica
+                  </div>
+                  <div
+                    class="priority-chip"
                     data-priority="HIGH"
                     onclick="selectPriority('HIGH')"
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#ef4444" stroke="none">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="#f59e0b" stroke="none">
                       <circle cx="12" cy="12" r="10"></circle>
                     </svg>
                     Alta
@@ -8597,7 +8877,7 @@
     </div>
 
     <!-- CONFIRM DIALOG (usado na To Do List) -->
-    <div class="confirm-overlay" id="confirmOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 10000; align-items: center; justify-content: center;">
+    <div class="confirm-overlay" id="confirmOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 10000; align-items: center; justify-content: center;">
       <div
         class="confirm-modal"
         id="confirmModal"
@@ -8605,13 +8885,29 @@
         aria-modal="true"
         aria-labelledby="confirmTitle"
         aria-describedby="confirmMessage"
-        style="position: relative; background: var(--bg-card); padding: 24px; border-radius: 16px; max-width: 400px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.3);"
+        style="position: relative; background: var(--bg-card); padding: 32px 28px 24px; border-radius: 20px; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.06); animation: confirmSlideIn 0.2s ease;"
       >
-        <button onclick="document.getElementById('confirmOverlay').classList.remove('active'); document.getElementById('confirmOverlay').style.display='none';" style="position: absolute; top: 12px; right: 12px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--text-secondary); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s;" onmouseover="this.style.background='var(--hover-bg)'" onmouseout="this.style.background='transparent'">×</button>
-        <div class="confirm-title" id="confirmTitle" style="font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">Confirmar</div>
-        <div class="confirm-message" id="confirmMessage" style="font-size: 14px; margin-bottom: 24px; color: var(--text-secondary); line-height: 1.5;"></div>
-        <div class="confirm-actions" style="display: flex; justify-content: flex-end; gap: 12px;">
-          <button type="button" class="confirm-btn danger" id="confirmOkBtn" style="padding: 10px 24px; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; background: #dc2626; color: white; transition: all 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
+        <style>
+          @keyframes confirmSlideIn {
+            from { opacity: 0; transform: scale(0.92) translateY(12px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+          }
+        </style>
+        <!-- Ícone de alerta -->
+        <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <div id="confirmIconWrap" style="width: 56px; height: 56px; border-radius: 50%; background: rgba(220,38,38,0.12); display: flex; align-items: center; justify-content: center;">
+            <svg id="confirmIcon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="confirm-title" id="confirmTitle" style="font-size: 18px; font-weight: 700; margin-bottom: 10px; color: var(--text-primary); text-align: center;">Confirmar</div>
+        <div class="confirm-message" id="confirmMessage" style="font-size: 14px; margin-bottom: 28px; color: var(--text-secondary); line-height: 1.6; text-align: center; white-space: pre-line;"></div>
+        <div class="confirm-actions" style="display: flex; gap: 12px;">
+          <button type="button" id="confirmCancelBtn" style="flex: 1; padding: 11px 20px; border-radius: 10px; border: 1px solid var(--border-color, rgba(255,255,255,0.1)); font-weight: 500; cursor: pointer; background: transparent; color: var(--text-secondary); font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='var(--hover-bg)'" onmouseout="this.style.background='transparent'">
+            Cancelar
+          </button>
+          <button type="button" class="confirm-btn danger" id="confirmOkBtn" style="flex: 1; padding: 11px 20px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; background: #dc2626; color: white; font-size: 14px; transition: all 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
             Excluir
           </button>
         </div>
@@ -8751,7 +9047,8 @@
 
           <div class="task-details-actions">
             <button class="details-action-btn" onclick="enableEditMode()">
-              ✏️ Editar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-1px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Editar
             </button>
             <button
               class="details-action-btn delete-btn"
@@ -8858,9 +9155,10 @@
               <div class="details-info">
                 <div class="details-label">Prioridade</div>
                 <select id="editPriority" class="details-edit-select">
-                  <option value="LOW">🟢 Baixa</option>
-                  <option value="MEDIUM">🟡 Média</option>
-                  <option value="HIGH">🔴 Alta</option>
+                  <option value="CRITICAL">Crítica</option>
+                  <option value="HIGH">Alta</option>
+                  <option value="MEDIUM">Média</option>
+                  <option value="LOW">Baixa</option>
                 </select>
               </div>
             </div>
@@ -9496,7 +9794,7 @@
         dayEnd.setDate(dayEnd.getDate() + 1);
 
         const dayTasks = tasks
-          .filter(t => t.status === 'SCHEDULED' && t.startTime && t.endTime)
+          .filter(t => (t.status === 'SCHEDULED' || t.status === 'LATE') && t.startTime && t.endTime)
           .filter(t => {
             const s = new Date(t.startTime);
             const e = new Date(t.endTime);
@@ -10473,7 +10771,7 @@
         today.setHours(0, 0, 0, 0);
         
         const alternatives = [];
-        const scheduledTasks = tasks.filter(t => t.status === 'SCHEDULED' && t.startTime && t.endTime);
+        const scheduledTasks = tasks.filter(t => (t.status === 'SCHEDULED' || t.status === 'LATE') && t.startTime && t.endTime);
         
         // Buscar slots livres no mesmo dia
         for (let hour = 8; hour < 22; hour++) {
@@ -10997,6 +11295,7 @@
                     });
                     
                     const priorityLabel = {
+                      'CRITICAL': 'Crítica',
                       'HIGH': 'Alta',
                       'MEDIUM': 'Média',
                       'LOW': 'Baixa'
@@ -11231,7 +11530,11 @@
           loadTasks();
           loadStatistics();
           renderCalendar();
-          
+
+          // Inicializar cor do seletor de prioridade
+          const _ps = document.getElementById("todoAddPriority");
+          if (_ps) updatePrioritySelectColor(_ps);
+
           // [INIT] NeuroTask inicializado com sucesso!
         } catch (initError) {
           console.error('[ERRO CRÍTICO DE INICIALIZAÇÃO]:', initError);
@@ -11260,9 +11563,10 @@
 
         // Priority
         const priorityMap = {
-          HIGH: "Alta 🔴",
-          MEDIUM: "Média 🟡",
-          LOW: "Baixa 🟢",
+          CRITICAL: "Crítica",
+          HIGH: "Alta",
+          MEDIUM: "Média",
+          LOW: "Baixa",
         };
         document.getElementById("detailsPriority").textContent =
           priorityMap[task.priority] || task.priority || "—";
@@ -13931,11 +14235,9 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         const todayStart = getTodayStart();
         const activeTasks = getOrderedTodoTasks(
           tasks
-            .filter((t) => isTodoTodayTask(t, todayStart))
             .filter((t) => t.status !== "DONE"),
         );
         const completedTasks = tasks
-          .filter((t) => isTodoTodayTask(t, todayStart))
           .filter((t) => t.status === "DONE");
 
         // Ativas
@@ -14457,9 +14759,18 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
       function getNextPriority(current) {
         const value = (current || "MEDIUM").toUpperCase();
-        if (value === "LOW") return "MEDIUM";
-        if (value === "MEDIUM") return "HIGH";
-        return "LOW";
+        if (value === "LOW")      return "MEDIUM";
+        if (value === "MEDIUM")   return "HIGH";
+        if (value === "HIGH")     return "CRITICAL";
+        return "LOW"; // CRITICAL → LOW
+      }
+
+      /** Abre o modal de criação de OS com prioridade CRÍTICA pré-selecionada. */
+      function openTaskModalCritical() {
+        openTaskModal();
+        requestAnimationFrame(() => {
+          selectPriority('CRITICAL');
+        });
       }
 
       // Fecha color-chooser ao clicar fora
@@ -14523,9 +14834,12 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
       }
 
       async function updateTask(taskId, updates) {
+        const _token = localStorage.getItem("neurotask_token");
+        const _headers = { "Content-Type": "application/json; charset=utf-8" };
+        if (_token) _headers["X-Auth-Token"] = _token;
         const response = await fetch(`${API_URL}/tasks/${taskId}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json; charset=utf-8" },
+          headers: _headers,
           body: JSON.stringify(updates),
         });
 
@@ -14537,13 +14851,18 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         return response.json();
       }
 
+      function updatePrioritySelectColor(sel) {
+        const colors = { CRITICAL: "#dc2626", HIGH: "#f59e0b", MEDIUM: "#fbbc04", LOW: "#34a853" };
+        sel.style.borderLeftColor = colors[sel.value] || "#fbbc04";
+      }
+
       async function addTodoTask() {
         const input = document.getElementById("todoAddInput");
         if (!input) return;
 
         const title = input.value.trim();
         if (!title) {
-          showNotification("igite um título para a tarefa.");
+          showNotification("Digite um título para a tarefa.");
           return;
         }
 
@@ -14558,7 +14877,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             body: JSON.stringify({
               title,
               description: "",
-              priority: "MEDIUM",
+              priority: document.getElementById("todoAddPriority")?.value || "MEDIUM",
             }),
           });
 
@@ -14844,8 +15163,15 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           showNotification('Nenhuma tarefa selecionada para exclusão.');
           return;
         }
-        
-        const confirmed = confirm('Deseja realmente excluir esta tarefa?');
+
+        const taskTitle = (document.getElementById("task-title-unique") || document.getElementById("modalTaskTitle"))?.value?.trim() || "esta tarefa";
+
+        const confirmed = await showConfirmDialog({
+          title: "Excluir tarefa",
+          message: `Tem certeza que deseja excluir:\n\n“${taskTitle}”\n\nEssa ação não pode ser desfeita.`,
+          okText: "Excluir",
+          cancelText: "Cancelar",
+        });
         if (!confirmed) return;
         
         try {
@@ -15010,7 +15336,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
             closeTaskModal();
             delete modal.dataset.editingId; // Limpar modo de edição
-            loadTasks();
+            await loadTasks();
 
             showNotification(successMessage);
           } else {
@@ -15063,11 +15389,13 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
       // Confirm dialog (Promise-based)
       let __confirmResolve = null;
 
-      function showConfirmDialog({ title, message, okText, cancelText }) {
+      function showConfirmDialog({ title, message, okText, cancelText, icon, iconColor, okColor }) {
         const overlay = document.getElementById("confirmOverlay");
         const titleEl = document.getElementById("confirmTitle");
         const messageEl = document.getElementById("confirmMessage");
         const okBtn = document.getElementById("confirmOkBtn");
+        const cancelBtn = document.getElementById("confirmCancelBtn");
+        const iconWrap = document.getElementById("confirmIconWrap");
 
         if (!overlay || !titleEl || !messageEl || !okBtn) {
           return Promise.resolve(confirm(message || "Tem certeza?"));
@@ -15075,7 +15403,30 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
         titleEl.textContent = title || "Confirmar";
         messageEl.textContent = message || "Tem certeza?";
-        okBtn.textContent = okText || "Excluir";
+        okBtn.textContent = okText || "Confirmar";
+        if (cancelBtn) cancelBtn.textContent = cancelText || "Cancelar";
+
+        // Cor do botão OK
+        const resolvedOkColor = okColor || "#dc2626";
+        const hoverOkColor = okColor ? okColor.replace(/[^,]+(?=\))/, s => { const n = parseInt(s, 16) || 0; return String(Math.max(n - 20, 0)); }) : "#b91c1c";
+        okBtn.style.background = resolvedOkColor;
+        okBtn.onmouseover = () => { okBtn.style.background = hoverOkColor || "#b91c1c"; };
+        okBtn.onmouseout = () => { okBtn.style.background = resolvedOkColor; };
+
+        // Ícone
+        if (iconWrap) {
+          const iconColor = (icon === "warn" ? "#f59e0b" : "#dc2626");
+          iconWrap.style.background = icon === "warn" ? "rgba(245,158,11,0.12)" : "rgba(220,38,38,0.12)";
+          const svgEl = document.getElementById("confirmIcon");
+          if (svgEl) {
+            svgEl.setAttribute("stroke", iconColor);
+            if (icon === "warn") {
+              svgEl.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>';
+            } else {
+              svgEl.innerHTML = '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>';
+            }
+          }
+        }
 
         overlay.style.display = 'flex';
         overlay.classList.add("active");
@@ -15085,6 +15436,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           overlay.classList.remove("active");
           overlay.onclick = null;
           okBtn.onclick = null;
+          if (cancelBtn) cancelBtn.onclick = null;
         };
 
         const finish = (result) => {
@@ -15101,6 +15453,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             if (e.target === overlay) finish(false);
           };
           okBtn.onclick = () => finish(true);
+          if (cancelBtn) cancelBtn.onclick = () => finish(false);
         });
       }
 
@@ -15316,9 +15669,16 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         if (!taskList) return; // container pode não existir na view atual
         taskList.innerHTML = "";
 
-        // Mostrar tarefas PENDING ou CRITICAS (mesmo agendadas, se criticas merecem atenção)
-        // Mas por padrão, filtro PENDING para backlog
-        const pendingTasks = tasks.filter((t) => t.status === "PENDING");
+        // Mostra PENDING (backlog) + LATE (prazo vencido, não concluído) para que
+        // uma OS criada ontem nunca desapareça da lista até ser marcada como DONE.
+        const pendingTasks = tasks.filter((t) => t.status === "PENDING" || t.status === "LATE");
+        // Ordena: LATE primeiro, depois por prioridade (HIGH → MEDIUM → LOW)
+        const prioOrder = { HIGH: 0, MEDIUM: 1, LOW: 2 };
+        pendingTasks.sort((a, b) => {
+          if (a.status === 'LATE' && b.status !== 'LATE') return -1;
+          if (b.status === 'LATE' && a.status !== 'LATE') return 1;
+          return (prioOrder[a.priority] ?? 1) - (prioOrder[b.priority] ?? 1);
+        });
 
         if (pendingTasks.length === 0) {
           taskList.innerHTML =
@@ -15329,8 +15689,12 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         pendingTasks.forEach((task) => {
           const card = document.createElement("div");
           card.className = "task-card";
-          
-          if (task.riskLevel === 'CRITICAL') {
+          const isLate = task.status === 'LATE';
+
+          if (isLate) {
+              card.style.borderLeft = "4px solid #dc2626";
+              card.style.background = "rgba(220,38,38,0.07)";
+          } else if (task.riskLevel === 'CRITICAL') {
               card.style.borderLeft = "4px solid #ef4444";
               card.style.background = "rgba(239,68,68,0.05)";
           } else if (task.riskLevel === 'WATCH') {
@@ -15346,18 +15710,29 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
           const content = document.createElement("div");
           content.className = "task-content";
-          
+
+          let statusLabel = "";
+          if (isLate) statusLabel = '<span style="color:#dc2626; font-weight:800; font-size:11px; background:rgba(220,38,38,0.15); padding:1px 5px; border-radius:4px;">⏰ ATRASADA</span> ';
+
           let riskLabel = "";
-          if (task.riskLevel === 'CRITICAL') riskLabel = '<span style="color:#ef4444; font-weight:800; font-size:11px;">⚠️ CRÍTICO</span> ';
-          if (task.riskLevel === 'WATCH') riskLabel = '<span style="color:#f59e0b; font-weight:700; font-size:11px;">⚡ ATENÇÃO</span> ';
+          if (!isLate && task.riskLevel === 'CRITICAL') riskLabel = '<span style="color:#ef4444; font-weight:800; font-size:11px;">⚠️ CRÍTICO</span> ';
+          if (!isLate && task.riskLevel === 'WATCH')    riskLabel = '<span style="color:#f59e0b; font-weight:700; font-size:11px;">⚡ ATENÇÃO</span> ';
+
+          // Exibe prazo vencido se disponível
+          let lateInfo = "";
+          if (isLate && task.endTime) {
+            const endDate = new Date(task.endTime).toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit' });
+            lateInfo = `<span style="font-size:10px; color:#dc2626;">Prazo: ${endDate}</span>`;
+          }
 
           content.innerHTML = `
             <div class="task-title" style="display:flex; flex-direction:column; gap:2px;">
-                <span>${riskLabel}${task.title}</span>
+                <span>${statusLabel}${riskLabel}${task.title}</span>
                 ${task.equipmentName ? `<span style="font-size:11px; color:var(--text-secondary);">${task.equipmentName} (${task.equipmentType || 'Geral'})</span>` : ''}
             </div>
             <div class="task-meta" style="margin-top:4px;">
               <span class="priority-badge ${task.priority}">${task.priority}</span>
+              ${lateInfo}
               ${task.sensorReadings ? `<span style="font-size:10px; color:var(--text-muted); max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📊 ${task.sensorReadings}</span>` : ''}
             </div>
           `;
@@ -15532,9 +15907,10 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         grid.className = "week-body-grid";
 
         const priorityColors = {
-          HIGH: "#e57373",
+          CRITICAL: "#dc2626",
+          HIGH: "#f59e0b",
           MEDIUM: "#fbbc04",
-          LOW: "#4caf50",
+          LOW: "#34a853",
         };
 
         for (let i = 0; i < 7; i++) {
@@ -15551,7 +15927,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           }
 
           const dayTasks = tasks
-            .filter((t) => t.status === "SCHEDULED" && t.startTime)
+            .filter((t) => (t.status === "SCHEDULED" || t.status === "LATE") && t.startTime)
             .filter((t) => {
               const d = new Date(t.startTime);
               return (
@@ -15704,7 +16080,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           weekEnd.setDate(start.getDate() + 7);
 
           const weekTasks = tasks
-            .filter((t) => t.status === "SCHEDULED" && t.startTime)
+            .filter((t) => (t.status === "SCHEDULED" || t.status === "LATE") && t.startTime)
             .map((t) => ({ ...t, _d: new Date(t.startTime) }))
             .filter((t) => t._d >= weekStart && t._d < weekEnd)
             .sort((a, b) => a._d - b._d);
@@ -15760,13 +16136,14 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         workingDate.setHours(0, 0, 0, 0);
 
         const priorityColors = {
-          HIGH: "#e57373",
+          CRITICAL: "#dc2626",
+          HIGH: "#f59e0b",
           MEDIUM: "#fbbc04",
-          LOW: "#4caf50",
+          LOW: "#34a853",
         };
 
         const dayEvents = tasks
-          .filter((t) => t.status === "SCHEDULED" && t.startTime)
+          .filter((t) => (t.status === "SCHEDULED" || t.status === "LATE") && t.startTime)
           .filter((t) => isSameDay(t.startTime, workingDate))
           .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
 
@@ -16577,7 +16954,8 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           dayBox.title = `${dayLabel} • ${taskCountLabel}`;
 
           const priorityColors = {
-            HIGH: "#ea4335",
+            CRITICAL: "#dc2626",
+            HIGH: "#f59e0b",
             MEDIUM: "#fbbc04",
             LOW: "#34a853",
           };
@@ -16764,7 +17142,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             cell.textContent = day.getDate();
 
             const dayTasks = tasks
-              .filter((t) => t.status === "SCHEDULED" && t.startTime)
+              .filter((t) => (t.status === "SCHEDULED" || t.status === "LATE") && t.startTime)
               .filter((t) => {
                 const d = new Date(t.startTime);
                 return (
@@ -16778,9 +17156,10 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               const dots = document.createElement("div");
               dots.className = "dots";
               const priorityColors = {
-                HIGH: "#e57373",
+                CRITICAL: "#dc2626",
+                HIGH: "#f59e0b",
                 MEDIUM: "#fbbc04",
-                LOW: "#4caf50",
+                LOW: "#34a853",
               };
 
               dayTasks.slice(0, 3).forEach((t) => {
@@ -16849,7 +17228,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
       function renderScheduledTasks() {
         const scheduledTasks = tasks.filter(
-          (t) => t.status === "SCHEDULED" && t.startTime,
+          (t) => (t.status === "SCHEDULED" || t.status === "LATE") && t.startTime,
         );
 
         scheduledTasks.forEach((task) => {
@@ -16918,7 +17297,8 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
                   taskDiv.style.background = customColor;
                 } else {
                   const priorityColors = {
-                    HIGH: "#ea4335",
+                    CRITICAL: "#dc2626",
+                    HIGH: "#f59e0b",
                     MEDIUM: "#fbbc04",
                     LOW: "#34a853",
                   };
@@ -18471,6 +18851,1150 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         }
       }
 
+      // ===== STATUS DISTRIBUTION: Donut chart =====
+      let statusChartInstance = null;
+      async function renderStatusChart() {
+        const canvas = document.getElementById('statusChart');
+        if (!canvas) return;
+        if (canvas.offsetWidth === 0) {
+          if (!renderStatusChart._dim) renderStatusChart._dim = 0;
+          if (++renderStatusChart._dim > 20) { renderStatusChart._dim = 0; return; }
+          setTimeout(renderStatusChart, 100); return;
+        }
+        renderStatusChart._dim = 0;
+        if (typeof Chart === 'undefined') { setTimeout(renderStatusChart, 500); return; }
+
+        try {
+          const response = await fetch(`${API_URL}/analytics/status`);
+          if (!response.ok) return;
+          const data = await response.json();
+
+          const pending   = data.PENDING   || 0;
+          const scheduled = data.SCHEDULED || 0;
+          const done      = data.DONE      || 0;
+          const late      = data.LATE      || 0;
+          const total     = pending + scheduled + done + late;
+
+          if (statusChartInstance) { statusChartInstance.destroy(); statusChartInstance = null; }
+
+          const ctx = canvas.getContext('2d');
+          statusChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+              labels: ['Pendentes', 'Agendadas', 'Concluídas', 'Atrasadas'],
+              datasets: [{
+                data: [pending, scheduled, done, late],
+                backgroundColor: ['rgba(156,163,175,0.85)', 'rgba(0,85,255,0.85)', 'rgba(16,185,129,0.85)', 'rgba(239,68,68,0.85)'],
+                borderColor: ['#9ca3af', '#0055FF', '#10b981', '#ef4444'],
+                borderWidth: 2,
+                hoverOffset: 6
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} OS (${total > 0 ? Math.round((c.parsed/total)*100) : 0}%)` } }
+              },
+              cutout: '68%'
+            }
+          });
+
+          // Legenda customizada com percentual
+          const legendEl = document.getElementById('statusChartLegend');
+          if (legendEl && total > 0) {
+            const colors = ['#9ca3af','#0055FF','#10b981','#ef4444'];
+            const labels = ['Pendentes','Agendadas','Concluídas','Atrasadas'];
+            const vals   = [pending, scheduled, done, late];
+            legendEl.innerHTML = labels.map((l, i) =>
+              `<span style="display:flex;align-items:center;gap:4px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:${colors[i]};display:inline-block;"></span>
+                ${l}: <b style="color:${colors[i]}">${vals[i]}</b>
+              </span>`
+            ).join('');
+          }
+        } catch(e) {
+          console.warn('❌ Status chart error:', e);
+        }
+      }
+
+      // ===== HOURLY HEATMAP: Bar chart por hora do dia =====
+      let hourlyChartInstance = null;
+      function renderHourlyChart() {
+        const canvas = document.getElementById('hourlyChart');
+        if (!canvas) return;
+        if (canvas.offsetWidth === 0) {
+          if (!renderHourlyChart._dim) renderHourlyChart._dim = 0;
+          if (++renderHourlyChart._dim > 20) { renderHourlyChart._dim = 0; return; }
+          setTimeout(renderHourlyChart, 100); return;
+        }
+        renderHourlyChart._dim = 0;
+        if (typeof Chart === 'undefined') { setTimeout(renderHourlyChart, 500); return; }
+
+        const tasks = getGlobalTasks ? getGlobalTasks() : (window.tasks || []);
+        const hours = new Array(24).fill(0);
+
+        tasks.forEach(t => {
+          const d = new Date(t.createdAt || t.startTime);
+          if (!isNaN(d.getTime())) hours[d.getHours()]++;
+        });
+
+        const labels = Array.from({length: 24}, (_, i) => i % 2 === 0 ? `${String(i).padStart(2,'0')}h` : '');
+        const peakHour = hours.indexOf(Math.max(...hours));
+        const maxVal   = Math.max(...hours, 1);
+
+        const colors = hours.map(v => {
+          const intensity = v / maxVal;
+          if (intensity > 0.75) return 'rgba(0,85,255,0.9)';
+          if (intensity > 0.5)  return 'rgba(0,85,255,0.65)';
+          if (intensity > 0.25) return 'rgba(0,85,255,0.4)';
+          return 'rgba(0,85,255,0.2)';
+        });
+
+        if (hourlyChartInstance) { hourlyChartInstance.destroy(); hourlyChartInstance = null; }
+
+        const ctx = canvas.getContext('2d');
+        try {
+          hourlyChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [{
+                label: 'OS por hora',
+                data: hours,
+                backgroundColor: colors,
+                borderColor: 'rgba(0,85,255,0.5)',
+                borderWidth: 1,
+                borderRadius: 3
+              }]
+            },
+            options: {
+              responsive: true, maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: c => ` ${c.parsed.y} OS às ${String(c.dataIndex).padStart(2,'0')}h` } }
+              },
+              scales: {
+                x: { grid: { color: 'rgba(148,163,184,0.08)' }, ticks: { color: 'var(--text-secondary)', font: { size: 9 }, maxRotation: 0 } },
+                y: { grid: { color: 'rgba(148,163,184,0.08)' }, ticks: { color: 'var(--text-secondary)', stepSize: 1 }, beginAtZero: true }
+              }
+            }
+          });
+
+          const peakEl = document.getElementById('hourlyChartPeak');
+          if (peakEl) {
+            if (maxVal > 0) {
+              peakEl.innerHTML = `Pico de abertura: <b style="color:#0055FF;">${String(peakHour).padStart(2,'0')}h–${String(peakHour+1).padStart(2,'0')}h</b> (${hours[peakHour]} OS)`;
+            } else {
+              peakEl.textContent = 'Sem OS cadastradas para análise de padrão horário.';
+            }
+          }
+        } catch(e) {
+          console.warn('❌ Hourly chart error:', e);
+        }
+      }
+
+      // ===== AI INSIGHTS PANEL: Padrões e correlações via IA =====
+      async function loadAIInsightsPanel() {
+        const panel   = document.getElementById('aiInsightsPanel');
+        const btn     = document.getElementById('aiInsightsPanelBtn');
+        if (!panel) return;
+
+        panel.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:16px 0;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0055FF" stroke-width="2" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> <span style="color:var(--text-secondary);font-size:13px;">Analisando padrões com IA...</span></div>';
+        if (btn) btn.disabled = true;
+
+        try {
+          const res = await fetch(`${API_URL}/ai/analyze`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...getAIAuthHeaders() },
+            body: JSON.stringify({ analysisType: 'patterns', timeRange: 'week' })
+          });
+
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          renderAIInsightsCards(panel, data);
+        } catch(e) {
+          // Fallback: gerar análise dos dados locais
+          renderAIInsightsFallback(panel);
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      }
+
+      function getAIAuthHeaders() {
+        try {
+          const token = localStorage.getItem('neurotask_token');
+          return token ? { 'X-Auth-Token': token } : {};
+        } catch { return {}; }
+      }
+
+      function renderAIInsightsCards(panel, data) {
+        const score    = data.score ?? null;
+        const summary  = data.summary || '';
+        const insights = Array.isArray(data.insights) ? data.insights : [];
+        const recs     = Array.isArray(data.recommendations) ? data.recommendations : [];
+
+        const scoreHtml = score !== null
+          ? `<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,85,255,0.12);border:1px solid rgba(0,85,255,0.3);border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;color:#0055FF;margin-bottom:12px;">
+               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+               Score de Resolução: ${score}%
+             </div>`
+          : '';
+
+        const summaryHtml = summary
+          ? `<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:14px;">${summary}</p>`
+          : '';
+
+        const insightsHtml = insights.length > 0
+          ? `<div style="margin-bottom:14px;">
+               <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#0055FF;margin-bottom:8px;">💡 Padrões Identificados</div>
+               <div style="display:flex;flex-direction:column;gap:6px;">
+                 ${insights.map(i => `
+                   <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(0,85,255,0.06);border-left:3px solid #0055FF;padding:8px 12px;border-radius:0 6px 6px 0;font-size:12px;color:var(--text-primary);line-height:1.5;">
+                     <span style="color:#0055FF;font-weight:700;flex-shrink:0;">•</span>${i}
+                   </div>`).join('')}
+               </div>
+             </div>`
+          : '';
+
+        const recsHtml = recs.length > 0
+          ? `<div>
+               <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;margin-bottom:8px;">🎯 Recomendações</div>
+               <div style="display:flex;flex-direction:column;gap:6px;">
+                 ${recs.map((r, idx) => `
+                   <div style="display:flex;align-items:flex-start;gap:8px;background:rgba(16,185,129,0.06);border-left:3px solid #10b981;padding:8px 12px;border-radius:0 6px 6px 0;font-size:12px;color:var(--text-primary);line-height:1.5;">
+                     <span style="color:#10b981;font-weight:700;flex-shrink:0;">${idx+1}.</span>${r}
+                   </div>`).join('')}
+               </div>
+             </div>`
+          : '';
+
+        panel.innerHTML = scoreHtml + summaryHtml + insightsHtml + recsHtml
+          || '<div style="color:var(--text-secondary);font-size:13px;">Análise concluída. Nenhum padrão identificado no período.</div>';
+      }
+
+      function renderAIInsightsFallback(panel) {
+        const tasks    = getGlobalTasks ? getGlobalTasks() : (window.tasks || []);
+        const total    = tasks.length;
+        const done     = tasks.filter(t => (t.status||'').toUpperCase() === 'DONE').length;
+        const late     = tasks.filter(t => (t.status||'').toUpperCase() === 'LATE').length;
+        const high     = tasks.filter(t => (t.priority||'').toUpperCase() === 'HIGH').length;
+        const rate     = total > 0 ? Math.round((done / total) * 100) : 0;
+        const lateRate = total > 0 ? Math.round((late / total) * 100) : 0;
+
+        const hours = new Array(24).fill(0);
+        tasks.forEach(t => { const d = new Date(t.createdAt || t.startTime); if (!isNaN(d.getTime())) hours[d.getHours()]++; });
+        const peakH = hours.indexOf(Math.max(...hours));
+
+        const insights = [];
+        const recs     = [];
+
+        if (rate >= 70)  insights.push(`Alta taxa de resolução: ${rate}% das OS foram concluídas.`);
+        else if (rate > 0) insights.push(`Taxa de resolução de ${rate}% — oportunidade de melhoria no fechamento de OS.`);
+        if (lateRate > 15) insights.push(`${lateRate}% das OS estão atrasadas — padrão de atraso acima do tolerável.`);
+        if (high > 0)    insights.push(`${high} OS de alta prioridade no backlog.`);
+        if (hours[peakH] > 0) insights.push(`Pico de abertura de OS às ${String(peakH).padStart(2,'0')}h — considere reforçar equipe neste turno.`);
+
+        if (lateRate > 15) recs.push('Revisar SLA de manutenção e redistribuir OSs atrasadas para técnicos disponíveis.');
+        if (high > 2)      recs.push('Priorizar execução das OSs críticas antes de novas aberturas de rotina.');
+        recs.push('Registrar datas de manutenção para melhorar precisão das análises preditivas.');
+
+        const fakeData = { score: rate, summary: `Análise local baseada em ${total} OS cadastradas.`, insights, recommendations: recs };
+        renderAIInsightsCards(panel, fakeData);
+      }
+
+      // ======================================================
+      //  FORECAST: Previsão de Produtividade (regressão linear)
+      // ======================================================
+      let forecastChartInstance = null;
+      async function renderForecastChart(historicDays = 14, horizon = 7) {
+        const canvas = document.getElementById('forecastChart');
+        if (!canvas) return;
+        if (!canvas.offsetParent) {
+          if (!renderForecastChart._dim) renderForecastChart._dim = 0;
+          if (++renderForecastChart._dim > 20) { renderForecastChart._dim = 0; return; }
+          setTimeout(() => renderForecastChart(historicDays, horizon), 100); return;
+        }
+        renderForecastChart._dim = 0;
+        if (typeof Chart === 'undefined') { setTimeout(() => renderForecastChart(historicDays, horizon), 500); return; }
+
+        let data;
+        try {
+          data = await taskService.getForecast(historicDays, horizon);
+        } catch(e) {
+          console.warn('Forecast backend indisponível, usando cálculo local:', e);
+          // Fallback local: calcula regressão linear via getGlobalTasks()
+          data = _buildLocalForecast(historicDays, horizon);
+        }
+
+        // Badge de tendência
+        const badge = document.getElementById('forecastTrendBadge');
+        if (badge) {
+          const trendMap = { up: { label: '↑ Crescente', bg: 'rgba(16,185,129,0.15)', color: '#10b981' },
+                             down: { label: '↓ Declinante', bg: 'rgba(239,68,68,0.15)', color: '#ef4444' },
+                             stable: { label: '→ Estável', bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' } };
+          const t = trendMap[data.trend] || trendMap.stable;
+          badge.textContent = t.label;
+          badge.style.background = t.bg;
+          badge.style.color = t.color;
+        }
+        document.getElementById('forecastHistDays').textContent = historicDays;
+        document.getElementById('forecastHorizon').textContent  = data.horizon || horizon;
+
+        // Monta labels/datasets
+        const histLabels    = data.historical.map(p => p.date.slice(5));  // MM-DD
+        const forecastLabels = data.forecast.map(p => p.date.slice(5));
+        const allLabels     = [...histLabels, ...forecastLabels];
+
+        const histValues    = data.historical.map(p => p.done);
+        const fcastValues   = new Array(histLabels.length).fill(null).concat(data.forecast.map(p => p.done));
+        // Conecta o último ponto histórico à projeção
+        if (histValues.length > 0 && fcastValues.length > histValues.length) {
+          fcastValues[histValues.length - 1] = histValues[histValues.length - 1];
+        }
+
+        // === LINHA DO MODELO: regressão linear sobre histórico estendida até o horizonte ===
+        // Permite comparar visualmente o ajuste do modelo vs. valores reais
+        const hn = histValues.length;
+        let sX=0, sY=0, sXY=0, sX2=0;
+        histValues.forEach((y, i) => { sX+=i; sY+=y; sXY+=i*y; sX2+=i*i; });
+        const hd = hn*sX2 - sX*sX;
+        const hm = hd !== 0 ? (hn*sXY - sX*sY) / hd : 0;
+        const hb = (sY - hm*sX) / Math.max(1, hn);
+        // Linha do modelo: retrocast (histórico) + forecast (projeção futura)
+        const modelLine = allLabels.map((_, i) => parseFloat(Math.max(0, hb + hm * i).toFixed(2)));
+
+        const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const fontColor = isDark ? '#aaa' : '#666';
+
+        if (forecastChartInstance) { forecastChartInstance.destroy(); forecastChartInstance = null; }
+        forecastChartInstance = new Chart(canvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: allLabels,
+            datasets: [
+              {
+                label: 'Concluídas (histórico)',
+                data: [...histValues, ...new Array(forecastLabels.length).fill(null)],
+                borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)',
+                tension: 0.3, fill: true, pointRadius: 4, pointHoverRadius: 6,
+                borderWidth: 2,
+              },
+              {
+                label: 'Projeção',
+                data: fcastValues,
+                borderColor: '#0055FF', backgroundColor: 'rgba(0,85,255,0.05)',
+                borderDash: [6, 4], tension: 0.3, fill: false,
+                pointRadius: 4, pointHoverRadius: 6, borderWidth: 2,
+                pointStyle: 'triangle',
+              },
+              {
+                label: 'Linha do modelo',
+                data: modelLine,
+                borderColor: 'rgba(245,158,11,0.75)',
+                backgroundColor: 'transparent',
+                borderDash: [3, 3], tension: 0, fill: false,
+                pointRadius: 0, pointHoverRadius: 0, borderWidth: 1.5,
+              },
+            ],
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y ?? 0} OS`,
+                },
+              },
+            },
+            scales: {
+              x: { grid: { color: gridColor }, ticks: { color: fontColor, maxTicksLimit: 10 } },
+              y: { beginAtZero: true, grid: { color: gridColor }, ticks: { color: fontColor, precision: 0 } },
+            },
+          },
+        });
+      }
+
+      /**
+       * Calcula forecast local via regressão linear sobre getGlobalTasks().
+       * Usado como fallback quando o backend não está disponível.
+       */
+      function _buildLocalForecast(historicDays = 14, horizon = 7) {
+        const allTasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : null) || window.tasks || [];
+        const today = new Date(); today.setHours(0,0,0,0);
+        const historical = [];
+        const doneSeries = [];
+
+        for (let i = historicDays - 1; i >= 0; i--) {
+          const dayStart = new Date(today); dayStart.setDate(today.getDate() - i);
+          const dayEnd   = new Date(dayStart); dayEnd.setDate(dayStart.getDate() + 1);
+          const ds = dayStart.toISOString().slice(0, 10);
+
+          const done = allTasks.filter(t => {
+            // completedAt (campo novo) → fallback createdAt para OS antigas sem o campo
+            // Nunca usa startTime: ele é o horário agendado, não o de conclusão
+            const dt = t.completedAt || t.createdAt;
+            return (t.status || '').toUpperCase() === 'DONE' && dt &&
+              new Date(dt) >= dayStart && new Date(dt) < dayEnd;
+          }).length;
+          const created = allTasks.filter(t =>
+            t.createdAt && new Date(t.createdAt) >= dayStart && new Date(t.createdAt) < dayEnd
+          ).length;
+
+          historical.push({ date: ds, done, created, isProjection: false });
+          doneSeries.push(done);
+        }
+
+        // Regressão linear mínimos quadrados
+        const n = doneSeries.length;
+        let sumX=0, sumY=0, sumXY=0, sumX2=0;
+        doneSeries.forEach((y, i) => { sumX+=i; sumY+=y; sumXY+=i*y; sumX2+=i*i; });
+        const denom = n*sumX2 - sumX*sumX;
+        const slope = denom !== 0 ? (n*sumXY - sumX*sumY) / denom : 0;
+        const intercept = (sumY - slope*sumX) / n;
+        const avg = sumY / Math.max(1, n);
+        const trend = slope > 0.05 ? 'up' : slope < -0.05 ? 'down' : 'stable';
+
+        const forecast = [];
+        for (let i = 1; i <= horizon; i++) {
+          const fd = new Date(today); fd.setDate(today.getDate() + i);
+          const projected = Math.max(0, Math.round(intercept + slope * (n + i - 1)));
+          forecast.push({ date: fd.toISOString().slice(0,10), done: projected, created: 0, isProjection: true });
+        }
+
+        // === MÉTRICAS DE QUALIDADE DO MODELO LOCAL ===
+        let ssRes = 0, ssTot = 0, maeAcc = 0;
+        doneSeries.forEach((y, i) => {
+          const pred = intercept + slope * i;
+          ssRes   += (y - pred) ** 2;
+          ssTot   += (y - avg) ** 2;
+          maeAcc  += Math.abs(y - pred);
+        });
+        const r2     = ssTot > 0 ? Math.max(0, 1 - ssRes / ssTot) : 0;
+        const mae    = maeAcc / Math.max(1, n);
+        const stdDev = Math.sqrt(ssRes / Math.max(1, n));
+
+        return { historical, forecast, avgDailyCompletion: avg, trend, horizon, r2, mae, stdDev };
+      }
+
+      // ======================================================
+      //  FORECAST: Previsão de Falhas de Equipamentos
+      // ======================================================
+      let equipFailureChartInstance = null;
+      function renderEquipmentFailureForecast() {
+        const canvas = document.getElementById('equipFailureChart');
+        if (!canvas) return;
+        if (!canvas.offsetParent) {
+          if (!renderEquipmentFailureForecast._dim) renderEquipmentFailureForecast._dim = 0;
+          if (++renderEquipmentFailureForecast._dim > 20) { renderEquipmentFailureForecast._dim = 0; return; }
+          setTimeout(renderEquipmentFailureForecast, 100); return;
+        }
+        renderEquipmentFailureForecast._dim = 0;
+        if (typeof Chart === 'undefined') { setTimeout(renderEquipmentFailureForecast, 500); return; }
+
+        const equipList = typeof getEquipmentList === 'function' ? getEquipmentList() : [];
+        const legend = document.getElementById('equipFailureLegend');
+
+        if (!equipList.length) {
+          if (legend) legend.textContent = 'Nenhum equipamento cadastrado.';
+          return;
+        }
+
+        // Converte risco textual → probabilidade estimada de falha (%)
+        const riscoToProb = { ALTO: 80, CRITICO: 95, MEDIO: 50, BAIXO: 20, NORMAL: 15 };
+
+        const sorted = [...equipList].sort((a, b) => (a.saude_percentual ?? 100) - (b.saude_percentual ?? 100));
+        const labels     = sorted.map(e => e.name || e.id || 'Equip.');
+        const healths    = sorted.map(e => Math.round(e.saude_percentual ?? 100));
+        const failProbs  = sorted.map(e => {
+          const r = (e.risco || '').toUpperCase();
+          return riscoToProb[r] ?? Math.max(0, Math.round(100 - (e.saude_percentual ?? 100)));
+        });
+
+        const bgColors = healths.map(h =>
+          h <= 30 ? 'rgba(239,68,68,0.75)' : h <= 60 ? 'rgba(245,158,11,0.75)' : 'rgba(16,185,129,0.75)'
+        );
+
+        const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+        const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const fontColor = isDark ? '#aaa' : '#666';
+
+        if (equipFailureChartInstance) { equipFailureChartInstance.destroy(); equipFailureChartInstance = null; }
+        equipFailureChartInstance = new Chart(canvas.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Saúde (%)',
+                data: healths,
+                backgroundColor: bgColors,
+                borderRadius: 6, barThickness: 16,
+              },
+              {
+                label: 'Prob. Falha (%)',
+                data: failProbs,
+                backgroundColor: 'rgba(0,85,255,0.4)',
+                borderRadius: 6, barThickness: 10,
+              },
+            ],
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: true, position: 'top', labels: { color: fontColor, font: { size: 11 } } },
+              tooltip: {
+                callbacks: {
+                  afterLabel: (ctx) => {
+                    const eq = sorted[ctx.dataIndex];
+                    if (!eq) return '';
+                    const lines = [];
+                    if (eq.risco)        lines.push(`Risco: ${eq.risco}`);
+                    if (eq.proxima_acao) lines.push(`Ação: ${eq.proxima_acao}`);
+                    if (eq.lastMaintDate) lines.push(`Última mant.: ${new Date(eq.lastMaintDate).toLocaleDateString('pt-BR')}`);
+                    return lines.join('\n');
+                  },
+                },
+              },
+            },
+            scales: {
+              x: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: fontColor, callback: v => v + '%' } },
+              y: { grid: { color: gridColor }, ticks: { color: fontColor, font: { size: 11 } } },
+            },
+          },
+        });
+
+        if (legend) {
+          const crit = healths.filter(h => h <= 30).length;
+          const warn = healths.filter(h => h > 30 && h <= 60).length;
+          legend.innerHTML = crit
+            ? `<span style="color:#ef4444;font-weight:600;">${crit} equipamento(s) em estado crítico</span> &nbsp;|&nbsp; ${warn} em atenção`
+            : warn
+              ? `<span style="color:#f59e0b;font-weight:600;">${warn} equipamento(s) em atenção</span>`
+              : `<span style="color:#10b981;font-weight:600;">Todos os equipamentos em bom estado</span>`;
+        }
+      }
+
+      // ===== ANOMALY DETECTION =====
+
+      /**
+       * Fallback local: porta JS do algoritmo Java detectAnomalies().
+       * Usa getGlobalTasks() para calcular anomalias sem backend.
+       */
+      function _buildLocalAnomalies(days = 30) {
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : (window.tasks || []));
+        const now = new Date();
+        const cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - days);
+        const fmt = d => d.toISOString().slice(0, 10);
+
+        // Série diária
+        const doneSeries = [];
+        const createdSeries = [];
+        const dates = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(now); d.setDate(d.getDate() - i);
+          const ds = fmt(d);
+          dates.push(ds);
+          doneSeries.push(tasks.filter(t => { const dt = t.completedAt || t.createdAt; return (t.status||'').toUpperCase() === 'DONE' && dt && dt.slice(0,10) === ds; }).length);
+          createdSeries.push(tasks.filter(t => t.createdAt && t.createdAt.slice(0,10) === ds).length);
+        }
+
+        const mean = arr => arr.reduce((a,b)=>a+b,0) / (arr.length||1);
+        const stddev = arr => { const m = mean(arr); return Math.sqrt(arr.reduce((a,b)=>a+(b-m)**2,0)/(arr.length||1)); };
+
+        const anomalies = [];
+
+        // PRODUCTIVITY_DROP (últimos 14 dias)
+        const doneW  = doneSeries.slice(-14);
+        const datesW = dates.slice(-14);
+        const dMean  = mean(doneW);
+        const dStd   = stddev(doneW);
+        if (dMean > 0) {
+          doneW.forEach((v, i) => {
+            if (v < dMean - 1.5 * dStd && v < dMean * 0.5) {
+              anomalies.push({
+                type: 'PRODUCTIVITY_DROP',
+                severity: v === 0 ? 'HIGH' : 'MEDIUM',
+                date: datesW[i],
+                message: `Queda de produtividade em ${datesW[i]}: ${v} tarefas concluídas (média ${dMean.toFixed(1)})`,
+                metadata: { done: v, mean: +dMean.toFixed(2), stddev: +dStd.toFixed(2) }
+              });
+            }
+          });
+        }
+
+        // TASK_ACCUMULATION (últimos 14 dias)
+        const crW   = createdSeries.slice(-14);
+        const crDts = dates.slice(-14);
+        const cMean = mean(crW);
+        const cStd  = stddev(crW);
+        crW.forEach((v, i) => {
+          if (v > cMean + 2 * cStd) {
+            anomalies.push({
+              type: 'TASK_ACCUMULATION',
+              severity: 'MEDIUM',
+              date: crDts[i],
+              message: `Pico de criação de tarefas em ${crDts[i]}: ${v} criadas (média ${cMean.toFixed(1)})`,
+              metadata: { created: v, mean: +cMean.toFixed(2) }
+            });
+          }
+        });
+
+        // LATE_SPIKE
+        const total  = tasks.length;
+        const late   = tasks.filter(t => t.status === 'LATE' || t.status === 'ATRASADA').length;
+        if (total > 0) {
+          const lateRate = late / total;
+          if (lateRate > 0.15 || late >= 5) {
+            anomalies.push({
+              type: 'LATE_SPIKE',
+              severity: lateRate > 0.3 ? 'CRITICAL' : lateRate > 0.2 ? 'HIGH' : 'MEDIUM',
+              date: fmt(now),
+              message: `${late} tarefa(s) atrasada(s) (${(lateRate*100).toFixed(1)}% do total)`,
+              metadata: { late, total, lateRate: +lateRate.toFixed(3) }
+            });
+          }
+        }
+
+        // IDLE_PERIOD
+        let streak = 0, streakStart = '';
+        doneSeries.forEach((v, i) => {
+          if (v === 0 && createdSeries[i] === 0) {
+            if (streak === 0) streakStart = dates[i];
+            streak++;
+          } else {
+            if (streak >= 3) {
+              anomalies.push({
+                type: 'IDLE_PERIOD',
+                severity: streak >= 5 ? 'HIGH' : 'MEDIUM',
+                date: streakStart,
+                message: `Período inativo de ${streak} dias a partir de ${streakStart}`,
+                metadata: { daysIdle: streak, start: streakStart }
+              });
+            }
+            streak = 0;
+          }
+        });
+        if (streak >= 3) {
+          anomalies.push({
+            type: 'IDLE_PERIOD',
+            severity: streak >= 5 ? 'HIGH' : 'MEDIUM',
+            date: streakStart,
+            message: `Período inativo de ${streak} dias a partir de ${streakStart}`,
+            metadata: { daysIdle: streak, start: streakStart }
+          });
+        }
+
+        const order = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
+        return anomalies.sort((a, b) => (order[a.severity] ?? 4) - (order[b.severity] ?? 4));
+      }
+
+      /**
+       * Renderiza o painel de anomalias com mini-gráfico da série temporal e marcadores de anomalia.
+       * Tenta o backend (LLM-powered); em caso de falha usa _buildLocalAnomalies().
+       */
+      let _anomalySparkInstance = null;
+      async function renderAnomalyPanel(days = 30) {
+        const panel = document.getElementById('anomalyPanel');
+        const badge = document.getElementById('anomalyCount');
+        if (!panel) return;
+
+        let anomalies = [];
+        try {
+          anomalies = await taskService.getAnomalies(days);
+        } catch (e) {
+          console.warn('anomaly backend:', e);
+          anomalies = _buildLocalAnomalies(days);
+        }
+
+        const typeConfig = {
+          PRODUCTIVITY_DROP: { label: 'Queda de Produtividade' },
+          TASK_ACCUMULATION: { label: 'Acúmulo de Tarefas' },
+          LATE_SPIKE:        { label: 'Aumento Súbito de Atrasos' },
+          IDLE_PERIOD:       { label: 'Período Inativo' },
+        };
+        const severityColor = { CRITICAL: '#ef4444', HIGH: '#f59e0b', MEDIUM: '#6366f1', LOW: '#94a3b8' };
+        const severityLabel = { CRITICAL: 'CRÍTICO', HIGH: 'ALTO', MEDIUM: 'MÉDIO', LOW: 'BAIXO' };
+
+        if (badge) {
+          badge.textContent = anomalies.length;
+          const top = anomalies[0]?.severity;
+          badge.style.background = severityColor[top] || (anomalies.length === 0 ? '#10b981' : '#6366f1');
+          // Pulso piscante quando há anomalia CRÍTICA
+          if (top === 'CRITICAL') {
+            badge.classList.add('anomaly-badge-pulse');
+          } else {
+            badge.classList.remove('anomaly-badge-pulse');
+          }
+        }
+
+        // Toast proativo para anomalias críticas ou altas (uma vez por sessão)
+        const critHighCount = anomalies.filter(a => a.severity === 'CRITICAL' || a.severity === 'HIGH').length;
+        if (critHighCount > 0 && !window._anomalyToastShown) {
+          window._anomalyToastShown = true;
+          const topAnomaly = anomalies[0];
+          const msgShort = topAnomaly.message.length > 70 ? topAnomaly.message.slice(0, 70) + '…' : topAnomaly.message;
+          showNotification(`${critHighCount} anomalia(s) crítica(s) detectada(s): ${msgShort}`);
+        } else if (anomalies.length === 0) {
+          window._anomalyToastShown = false;
+        }
+
+        // Série diária para sparkline
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : (window.tasks || []));
+        const now = new Date(); now.setHours(0,0,0,0);
+        const seriesDates = [], seriesDone = [];
+        for (let i = days - 1; i >= 0; i--) {
+          const d = new Date(now); d.setDate(d.getDate() - i);
+          const ds = d.toISOString().slice(0, 10);
+          seriesDates.push(ds.slice(5));
+          seriesDone.push(tasks.filter(t => { const dt = t.completedAt || t.createdAt; return (t.status||'').toUpperCase() === 'DONE' && dt && dt.slice(0,10) === ds; }).length);
+        }
+        const anomalyDateMM = new Set(anomalies.map(a => a.date ? a.date.slice(5) : ''));
+        const ptColors  = seriesDates.map(d => anomalyDateMM.has(d) ? '#ef4444' : 'rgba(0,0,0,0)');
+        const ptRadii   = seriesDates.map(d => anomalyDateMM.has(d) ? 5 : 2);
+
+        panel.innerHTML = `<div style="position:relative;height:75px;margin-bottom:10px;"><canvas id="anomalySparkline"></canvas></div><div id="anomalyCardList"></div>`;
+
+        if (typeof Chart !== 'undefined') {
+          const isDark = document.body.classList.contains('dark-mode');
+          const gridC = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)';
+          const fontC = isDark ? '#888' : '#999';
+          const sparkEl = document.getElementById('anomalySparkline');
+          if (sparkEl) {
+            if (_anomalySparkInstance) { _anomalySparkInstance.destroy(); _anomalySparkInstance = null; }
+            _anomalySparkInstance = new Chart(sparkEl.getContext('2d'), {
+              type: 'line',
+              data: { labels: seriesDates, datasets: [{
+                data: seriesDone, borderColor: '#6366f1',
+                backgroundColor: 'rgba(99,102,241,0.08)', fill: true,
+                tension: 0.3, borderWidth: 2,
+                pointRadius: ptRadii, pointBackgroundColor: ptColors, pointBorderColor: ptColors,
+              }] },
+              options: {
+                animation: false, responsive: true, maintainAspectRatio: false,
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { title: t => `Dia ${t[0].label}`, label: t => `${t.parsed.y} OS concluídas` } }
+                },
+                scales: {
+                  x: { grid: { color: gridC }, ticks: { color: fontC, maxTicksLimit: 8, font: { size: 9 } } },
+                  y: { beginAtZero: true, grid: { color: gridC }, ticks: { color: fontC, precision: 0, font: { size: 9 } } },
+                },
+              },
+            });
+          }
+        }
+
+        const listEl = document.getElementById('anomalyCardList');
+        if (!listEl) return;
+        if (anomalies.length === 0) {
+          listEl.innerHTML = `<div style="padding:10px 14px;border-left:4px solid #10b981;border-radius:6px;background:color-mix(in srgb,#10b981 10%,transparent);font-size:12px;color:#10b981;font-weight:600;">✓ Nenhuma anomalia nos últimos ${days} dias</div>`;
+          return;
+        }
+        listEl.innerHTML = anomalies.map(a => {
+          const cfg   = typeConfig[a.type] || { label: a.type };
+          const color = severityColor[a.severity] || '#94a3b8';
+          const slbl  = severityLabel[a.severity] || a.severity;
+          return `<div style="margin-bottom:7px;padding:9px 13px;border-left:4px solid ${color};border-radius:6px;background:color-mix(in srgb,${color} 8%,transparent);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+              <span style="font-size:12px;font-weight:600;">${cfg.label}</span>
+              <span style="font-size:10px;font-weight:700;color:${color};padding:1px 6px;border-radius:10px;border:1px solid ${color};">${slbl}</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);">${a.message}</div>
+            ${a.date ? `<div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">${a.date}</div>` : ''}
+          </div>`;
+        }).join('');
+      }
+
+      // ===== INSIGHTS IA =====
+      async function renderInsightsCard() {
+        const el = document.getElementById('insightsNarrative');
+        if (!el) return;
+        el.innerHTML = '<span style="color:var(--text-secondary);">Analisando dados com IA...</span>';
+        try {
+          const data = await taskService.getInsights();
+          const text = (data && data.narrative) ? data.narrative : String(data);
+          el.innerHTML = `<div style="display:flex;align-items:flex-start;gap:10px;"><svg style="flex-shrink:0;margin-top:2px" width="14" height="14" viewBox="0 0 24 24" fill="#8b5cf6"><circle cx="12" cy="12" r="10"/></svg><span>${text}</span></div>`;
+          // Atualizar badge de fonte
+          const badge = el.closest('.ind-chart-card')?.querySelector('[data-insights-badge]');
+          if (badge) { badge.textContent = 'GROQ IA'; badge.style.background = 'rgba(139,92,246,0.2)'; }
+        } catch (e) {
+          console.warn('insights AI:', e);
+          // Fallback local quando backend indisponível
+          const allTasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+          const total = allTasks.length;
+          const done  = allTasks.filter(t => (t.status || '').toUpperCase() === 'DONE').length;
+          const late  = allTasks.filter(t => (t.status || '').toUpperCase() === 'LATE').length;
+          const crit  = allTasks.filter(t => (t.priority||'').toUpperCase() === 'CRITICAL' && (t.status||'').toUpperCase() !== 'DONE').length;
+          const rate  = total > 0 ? (done * 100 / total).toFixed(0) : 0;
+          const rateColor = rate >= 70 ? '#10b981' : rate >= 40 ? '#f59e0b' : '#ef4444';
+          const lateMsg = late > 0 ? `<b style="color:#ef4444">${late} OS atrasada(s)</b> requerem atenção imediata.` : 'Nenhuma OS atrasada — operação dentro do prazo.';
+          const critMsg = crit > 0 ? ` <b style="color:#dc2626">${crit} OS crítica(s)</b> aguardando resolução.` : '';
+          el.innerHTML = `<div style="display:flex;flex-direction:column;gap:8px;">
+            <div>Taxa de conclusão: <b style="color:${rateColor};font-size:16px">${rate}%</b> <span style="color:var(--text-secondary);font-size:12px">(${done}/${total} OS)</span></div>
+            <div style="font-size:12px">${lateMsg}${critMsg}</div>
+            <div style="font-size:11px;color:var(--text-secondary);border-top:1px solid var(--border-color);padding-top:6px;margin-top:2px;">Análise gerada localmente — conecte ao backend GROQ para insights gerados por IA.</div>
+          </div>`;
+          // Atualizar badge de fonte
+          const badge = el.closest('.ind-chart-card')?.querySelector('[data-insights-badge]');
+          if (badge) { badge.textContent = 'Análise Local'; badge.style.background = 'rgba(148,163,184,0.15)'; badge.style.color = '#94a3b8'; }
+        }
+      }
+
+      // ===== DISTRIBUIÇÃO POR PRIORIDADE =====
+      let priorityDistChartInstance = null;
+      async function renderPriorityChart() {
+        const canvas = document.getElementById('priorityDistChart');
+        if (!canvas) return;
+        if (typeof Chart === 'undefined') { setTimeout(renderPriorityChart, 500); return; }
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+        const prioMap = { CRITICAL: 0, HIGH: 0, MEDIUM: 0, LOW: 0 };
+        tasks.forEach(t => {
+          const p = (t.priority || 'LOW').toUpperCase();
+          if (prioMap[p] !== undefined) prioMap[p]++; else prioMap.LOW++;
+        });
+        const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
+        const fontColor = isDark ? '#aaa' : '#666';
+        const labels = ['Crítica', 'Alta', 'Média', 'Baixa'];
+        const values = [prioMap.CRITICAL, prioMap.HIGH, prioMap.MEDIUM, prioMap.LOW];
+        const colors = ['#ef4444', '#f59e0b', '#6366f1', '#94a3b8'];
+        const total = tasks.length;
+        if (priorityDistChartInstance) { priorityDistChartInstance.destroy(); priorityDistChartInstance = null; }
+        priorityDistChartInstance = new Chart(canvas.getContext('2d'), {
+          type: 'doughnut',
+          data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { font: { size: 10 }, padding: 8, color: fontColor, usePointStyle: true, boxWidth: 8 },
+              },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.label}: ${ctx.parsed} OS${total > 0 ? ` (${((ctx.parsed / total) * 100).toFixed(0)}%)` : ''}`,
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // ===== RESUMO EXECUTIVO =====
+      function renderExecutiveSummary() {
+        const card = document.getElementById('executiveSummaryCard');
+        if (!card) return;
+        card.style.display = 'block';
+
+        const allTasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+        const total    = allTasks.length;
+        const done     = allTasks.filter(t => (t.status||'').toUpperCase() === 'DONE').length;
+        const late     = allTasks.filter(t => (t.status||'').toUpperCase() === 'LATE').length;
+        const crit     = allTasks.filter(t => (t.priority||'').toUpperCase() === 'CRITICAL' && (t.status||'').toUpperCase() !== 'DONE').length;
+        const sched    = allTasks.filter(t => ['SCHEDULED','LATE'].includes((t.status||'').toUpperCase())).length;
+
+        // Score de saúde: base = taxa conclusão, penaliza por tardias e críticas
+        const baseRate = total > 0 ? (done / total) * 100 : 50;
+        const penalty  = Math.min(late * 5 + crit * 8, 40);
+        const score    = Math.max(Math.min(Math.round(baseRate - penalty), 100), 0);
+        const scoreColor = score >= 70 ? '#10b981' : score >= 40 ? '#f59e0b' : '#ef4444';
+        const scoreLabel = score >= 70 ? 'Operação Saudável' : score >= 40 ? 'Atenção Necessária' : 'Situação Crítica';
+
+        const scoreValEl   = document.getElementById('execScoreVal');
+        const scoreBarEl   = document.getElementById('execScoreBarFill');
+        const sourceBadge  = document.getElementById('execSummarySource');
+        const alertTextEl  = document.getElementById('execTopAlertText');
+        const alertSubEl   = document.getElementById('execTopAlertSub');
+
+        if (scoreValEl) { scoreValEl.textContent = `${score}`; scoreValEl.style.color = scoreColor; }
+        if (scoreBarEl) { scoreBarEl.style.width = `${score}%`; scoreBarEl.style.background = scoreColor; }
+        if (sourceBadge) { sourceBadge.textContent = 'Análise Local'; }
+
+        // Adicionar rótulo abaixo do score
+        const scoreSubEl = scoreValEl?.nextElementSibling;
+        if (scoreSubEl) scoreSubEl.textContent = scoreLabel;
+
+        // Determinar top alert
+        if (alertTextEl) {
+          if (crit > 0) {
+            const critTask = allTasks.find(t => (t.priority||'').toUpperCase() === 'CRITICAL' && (t.status||'').toUpperCase() !== 'DONE');
+            alertTextEl.textContent = `${crit} OS crítica(s) aguardando resolução imediata`;
+            alertTextEl.style.color = '#dc2626';
+            if (alertSubEl) alertSubEl.textContent = critTask ? `“${critTask.title}” e outras` : '';
+          } else if (late > 0) {
+            alertTextEl.textContent = `${late} OS atrasada(s) precisam de atenção`;
+            alertTextEl.style.color = '#f59e0b';
+            if (alertSubEl) alertSubEl.textContent = `${sched} OS agendadas no total`;
+          } else if (total === 0) {
+            alertTextEl.textContent = 'Nenhuma OS cadastrada ainda';
+            alertTextEl.style.color = 'var(--text-secondary)';
+            if (alertSubEl) alertSubEl.textContent = 'Adicione a primeira Ordem de Serviço para iniciar a análise';
+          } else {
+            alertTextEl.textContent = 'Operação dentro do prazo';
+            alertTextEl.style.color = '#10b981';
+            if (alertSubEl) alertSubEl.textContent = `${done}/${total} OS concluídas (${Math.round(baseRate)}%)`;
+          }
+        }
+      }
+
+      // ===== CLASSIFICAÇÃO AUTOMÁTICA DE OS (Ponto 5) =====
+
+      async function renderClassificationCard() {
+        const body = document.getElementById('classificationBody');
+        if (!body) return;
+        body.innerHTML = '<span style="color:var(--text-secondary);font-size:13px;">Classificando OS com IA...</span>';
+        const catConfig = {
+          ELETRICA:      { label: 'Elétrica',       color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+          MECANICA:      { label: 'Mecânica',        color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
+          HIDRAULICA:    { label: 'Hidráulica',      color: '#06b6d4', bg: 'rgba(6,182,212,0.12)'  },
+          INSTRUMENTACAO:{ label: 'Instrumentação',  color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)' },
+          CIVIL:         { label: 'Civil',           color: '#64748b', bg: 'rgba(100,116,139,0.12)'},
+          OUTRO:         { label: 'Outro',           color: '#94a3b8', bg: 'rgba(148,163,184,0.12)'},
+        };
+        let items = [];
+        let isLocal = false;
+        try {
+          items = await taskService.classifyTasks();
+        } catch (e) {
+          isLocal = true;
+          // Fallback local: clasificação por palavras-chave
+          const allTasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+          const kwMap = [
+            ['ELETRICA',       /eletri[ck]|tensao|corrente|transformador|disjuntor|rele|fusivel|motor el|curto|sobrecarga/i],
+            ['MECANICA',       /mecan|rolamento|engrenagem|vibra|desgaste|lubrif|correia|redut|acoplam/i],
+            ['HIDRAULICA',     /hidraul|bomba|fluido|pressao|vazam|tubula|valvula hidro|oleo/i],
+            ['INSTRUMENTACAO', /sensor|transmissor|calibr|instrumento|medidor|alarme|plc|scada/i],
+            ['CIVIL',          /estrutur|civil|alvenaria|pintura|fissura|telhado|parede|piso/i],
+          ];
+          items = allTasks.filter(t => (t.status||'').toUpperCase() !== 'DONE').map(t => {
+            const text = `${t.title||''} ${t.description||''}`;
+            for (const [cat, rx] of kwMap) if (rx.test(text)) return { taskId: t.id, title: t.title, category: cat, confidence: 0.7 };
+            return { taskId: t.id, title: t.title, category: 'OUTRO', confidence: 0.5 };
+          });
+        }
+        if (!items.length) {
+          body.innerHTML = '<span style="color:var(--text-secondary);font-size:13px;">Nenhuma OS aberta para classificar.</span>';
+          return;
+        }
+        // Sumário por categoria
+        const catCounts = {};
+        items.forEach(it => { catCounts[it.category] = (catCounts[it.category] || 0) + 1; });
+        const summaryPills = Object.entries(catCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([cat, n]) => {
+            const cfg = catConfig[cat] || catConfig.OUTRO;
+            return `<span style="font-size:11px;padding:3px 9px;border-radius:10px;background:${cfg.bg};color:${cfg.color};font-weight:600;white-space:nowrap;">${cfg.label} ${n}</span>`;
+          }).join('');
+        const MAX_VISIBLE = 5;
+        const hiddenCount = items.length - MAX_VISIBLE;
+        const collapseRow = `<tr><td colspan="3" style="padding:8px 10px;text-align:center;"><button onclick="(function(){
+              var h=document.getElementById('classificationHidden');
+              var b=document.getElementById('classificationExpandRow');
+              if(h){h.style.display='none'; if(b)b.style.display='';}
+            })()" style="background:none;border:1px dashed var(--border-color);border-radius:8px;color:var(--text-secondary);font-size:12px;padding:4px 14px;cursor:pointer;">↑ Recolher</button></td></tr>`;
+        const expandBtn   = hiddenCount > 0
+          ? `<tr id="classificationExpandRow"><td colspan="3" style="padding:8px 10px;text-align:center;"><button onclick="(function(){
+              var h=document.getElementById('classificationHidden');
+              var b=document.getElementById('classificationExpandRow');
+              if(h){h.style.display=''; if(b)b.style.display='none';}
+            })()" style="background:none;border:1px dashed var(--border-color);border-radius:8px;color:var(--text-secondary);font-size:12px;padding:4px 14px;cursor:pointer;">&#8943; Ver mais ${hiddenCount} OS</button></td></tr>`
+          : '';
+        // Barra de progresso de confiança
+        const buildConfBar = (conf) => {
+          const p = Math.round((conf || 0.75) * 100);
+          const color = p >= 85 ? '#10b981' : p >= 65 ? '#f59e0b' : '#94a3b8';
+          const label = p >= 85 ? 'Alta' : p >= 65 ? 'Média' : 'Baixa';
+          return `<div style="display:flex;flex-direction:column;gap:3px;min-width:80px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:10px;font-weight:600;color:${color};">${label}</span>
+              <span style="font-size:10px;color:var(--text-secondary);">${p}%</span>
+            </div>
+            <div style="height:5px;border-radius:3px;background:var(--border-color);overflow:hidden;">
+              <div style="height:100%;width:${p}%;background:${color};border-radius:3px;"></div>
+            </div>
+          </div>`;
+        };
+        // Recriar buildRow com barra de confiança
+        const buildRowConf = (it) => {
+          const cfg = catConfig[it.category] || catConfig.OUTRO;
+          const safeTitle = (it.title || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          return `<tr style="border-bottom:1px solid var(--border-color);">
+            <td style="padding:8px 10px;font-size:12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${safeTitle}">${safeTitle}</td>
+            <td style="padding:8px 10px;"><span style="font-size:11px;padding:3px 10px;border-radius:10px;background:${cfg.bg};color:${cfg.color};font-weight:600;">${cfg.label}</span></td>
+            <td style="padding:8px 10px;min-width:100px;">${buildConfBar(it.confidence)}</td>
+          </tr>`;
+        };
+        const visibleRowsConf = items.slice(0, MAX_VISIBLE).map(buildRowConf).join('');
+        const hiddenRowsConf  = items.slice(MAX_VISIBLE).map(buildRowConf).join('');
+        const hiddenTbodyConf = hiddenCount > 0
+          ? `<tbody id="classificationHidden" style="display:none;">${hiddenRowsConf}${collapseRow}</tbody>`
+          : '';
+        body.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">${summaryPills}</div><table style="width:100%;border-collapse:collapse;">
+          <thead><tr style="border-bottom:1px solid var(--border-color);">
+            <th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Ordem de Serviço</th>
+            <th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Categoria IA</th>
+            <th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Confiança do Modelo</th>
+          </tr></thead>
+          <tbody>${visibleRowsConf}${expandBtn}</tbody>
+          ${hiddenTbodyConf}
+        </table>`;
+        // Atualizar badge de fonte
+        const classifBadge = document.getElementById('classifSourceBadge');
+        if (classifBadge) {
+          if (isLocal) {
+            classifBadge.textContent = 'Local';
+            classifBadge.style.background = 'rgba(148,163,184,0.15)';
+            classifBadge.style.color = '#94a3b8';
+          } else {
+            classifBadge.textContent = 'IA';
+            classifBadge.style.background = 'rgba(6,182,212,0.12)';
+            classifBadge.style.color = '#06b6d4';
+          }
+        }
+      }
+
+      // ===== RECOMENDAÇÕES DE OTIMIZAÇÃO (Ponto 6) =====
+
+      async function renderRecommendationsCard() {
+        const body = document.getElementById('recommendationsBody');
+        if (!body) return;
+        body.innerHTML = '<span style="color:var(--text-secondary);font-size:13px;grid-column:1/-1;">Gerando recomendações com IA...</span>';
+        const impactCfg = {
+          ALTA:  { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', arrow: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>', barWidth: 90 },
+          MEDIA: { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)',  arrow: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>', barWidth: 55 },
+          BAIXA: { color: '#10b981', bg: 'rgba(16,185,129,0.12)',  arrow: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>', barWidth: 25 },
+        };
+        const prioCfg = {
+          URGENTE:    { color: '#ef4444', label: 'Urgente',    dot: '#ef4444' },
+          IMPORTANTE: { color: '#f59e0b', label: 'Importante', dot: '#f59e0b' },
+          ROTINA:     { color: '#6366f1', label: 'Rotina',     dot: '#6366f1' },
+        };
+        let recs = [];
+        let isLocal = false;
+        try {
+          recs = await taskService.getRecommendations();
+        } catch (e) {
+          isLocal = true;
+          const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+          const late  = tasks.filter(t => (t.status||'').toUpperCase() === 'LATE').length;
+          const total = tasks.length;
+          recs = [
+            { action: late > 0 ? `Resolver as ${late} OS atrasadas priorizando alta prioridade` : 'Manter o ritmo atual de conclusão de OS', impact: late > 0 ? 'ALTA' : 'BAIXA', priority: late > 0 ? 'URGENTE' : 'ROTINA', category: 'Gestão de Prazos' },
+            { action: 'Revisar periodicidade de manutenção preventiva dos equipamentos críticos', impact: 'MEDIA', priority: 'IMPORTANTE', category: 'Manutenção Preventiva' },
+            { action: `Distribuir as ${total} OS entre os técnicos conforme capacidade disponível`, impact: 'MEDIA', priority: 'IMPORTANTE', category: 'Distribuição de Carga' },
+            { action: 'Documentar lições aprendidas das OS concluídas este mês', impact: 'BAIXA', priority: 'ROTINA', category: 'Gestão do Conhecimento' },
+          ];
+        }
+        if (!recs.length) {
+          body.innerHTML = '<span style="color:var(--text-secondary);font-size:13px;grid-column:1/-1;">Nenhuma recomendação disponível.</span>';
+          return;
+        }
+        // Atualizar badge de fonte
+        const recBadge = body.closest('.ind-chart-card')?.querySelector('[data-rec-badge]');
+        if (recBadge) {
+          if (isLocal) { recBadge.textContent = 'Análise Local'; recBadge.style.background = 'rgba(148,163,184,0.15)'; recBadge.style.color = '#94a3b8'; }
+          else { recBadge.textContent = 'GROQ'; recBadge.style.background = 'rgba(16,185,129,0.15)'; recBadge.style.color = '#10b981'; }
+        }
+        // Atualizar resumo executivo com a primeira recomendação de maior impacto
+        const topRec = [...recs].sort((a,b) => { const o = {ALTA:0,MEDIA:1,BAIXA:2}; return (o[(a.impact||'BAIXA').toUpperCase()]||2)-(o[(b.impact||'BAIXA').toUpperCase()]||2); })[0];
+        const execRecText = document.getElementById('execTopRecText');
+        const execRecCat  = document.getElementById('execTopRecCategory');
+        if (execRecText && topRec) { execRecText.textContent = topRec.action; }
+        if (execRecCat  && topRec) { execRecCat.textContent = `${topRec.category || ''} — Impacto ${topRec.impact || 'Médio'}`; }
+        body.innerHTML = recs.map((r, idx) => {
+          const imp  = impactCfg[(r.impact||'MEDIA').toUpperCase()] || impactCfg.MEDIA;
+          const prio = prioCfg[(r.priority||'IMPORTANTE').toUpperCase()] || prioCfg.IMPORTANTE;
+          const safeAction = (r.action || '').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+          const rankLabel = idx === 0 ? '<span style="font-size:9px;font-weight:800;background:#6366f1;color:#fff;border-radius:4px;padding:1px 5px;letter-spacing:.03em;">TOP</span> ' : '';
+          return `<div style="padding:16px;border-radius:12px;background:color-mix(in srgb, var(--bg-card) 90%, transparent 10%);border:1px solid var(--border-color);display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+              <span style="font-size:11px;color:var(--text-secondary);">${r.category || 'Operações'}</span>
+              <div style="display:flex;align-items:center;gap:4px;">${imp.arrow}<span style="font-size:10px;font-weight:700;color:${imp.color};">Impacto ${r.impact || 'MÉDIO'}</span></div>
+            </div>
+            <div style="font-size:13px;font-weight:600;line-height:1.45;color:var(--text-primary);">${rankLabel}${safeAction}</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:11px;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:7px;height:7px;border-radius:50%;background:${prio.dot};display:inline-block;"></span><span style="color:${prio.color};">${prio.label}</span></span>
+                <span style="font-size:10px;color:var(--text-secondary);">${imp.barWidth}% impacto</span>
+              </div>
+              <div style="height:4px;border-radius:2px;background:var(--border-color);overflow:hidden;">
+                <div style="height:100%;width:${imp.barWidth}%;background:${imp.color};border-radius:2px;transition:width .8s ease;"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      }
+
+      // ===== CORRELAÇÃO =====
+
+      function _buildLocalCorrelation() {
+        const tasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : (window.tasks || []));
+        const completionByDOW = new Array(7).fill(0);
+        const lateByDOW       = new Array(7).fill(0);
+        tasks.forEach(t => {
+          const dt = t.completedAt || t.createdAt;
+          if ((t.status||'').toUpperCase() === 'DONE' && dt) completionByDOW[new Date(dt).getDay()]++;
+          // Para LATE, usa endTime (prazo vencido) como dia de referência da semana
+          if ((t.status||'').toUpperCase() === 'LATE' && (t.endTime || t.startTime)) lateByDOW[new Date(t.endTime || t.startTime).getDay()]++;
+        });
+        const completionByPriority = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+        const lateByPriority       = { HIGH: 0, MEDIUM: 0, LOW: 0 };
+        tasks.forEach(t => {
+          const p = (t.priority||'').toUpperCase();
+          if ((t.status||'').toUpperCase() === 'DONE' && completionByPriority[p] !== undefined) completionByPriority[p]++;
+          if ((t.status||'').toUpperCase() === 'LATE' && lateByPriority[p] !== undefined) lateByPriority[p]++;
+        });
+        return { dayLabels: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'], completionByDayOfWeek: completionByDOW, lateByDayOfWeek: lateByDOW, completionByPriority, lateByPriority };
+      }
+
+      let _corrDOWChart = null, _corrPrioChart = null;
+      async function renderCorrelationCard() {
+        const c1 = document.getElementById('correlationDOWChart');
+        const c2 = document.getElementById('correlationPrioChart');
+        if (!c1 || !c2 || typeof Chart === 'undefined') return;
+        let data;
+        try {
+          data = await taskService.getCorrelation();
+        } catch(e) {
+          console.warn('correlation backend:', e);
+          data = _buildLocalCorrelation();
+        }
+        const isDark = document.body.classList.contains('dark-mode');
+        const gridC = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
+        const fontC = isDark ? '#aaa' : '#666';
+        const dl = data.dayLabels || ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+        const cdow = Array.isArray(data.completionByDayOfWeek) ? data.completionByDayOfWeek : Object.values(data.completionByDayOfWeek || {});
+        const ldow = Array.isArray(data.lateByDayOfWeek) ? data.lateByDayOfWeek : Object.values(data.lateByDayOfWeek || {});
+        const cp = data.completionByPriority || {}; const lp = data.lateByPriority || {};
+        if (_corrDOWChart) { _corrDOWChart.destroy(); _corrDOWChart = null; }
+        _corrDOWChart = new Chart(c1.getContext('2d'), {
+          type: 'bar',
+          data: { labels: dl, datasets: [
+            { label: 'Concluídas', data: cdow, backgroundColor: 'rgba(16,185,129,0.75)', borderRadius: 3 },
+            { label: 'Atrasadas',  data: ldow, backgroundColor: 'rgba(239,68,68,0.75)',  borderRadius: 3 },
+          ]},
+          options: { responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: { legend: { labels: { color: fontC, font: { size: 10 } } } },
+            scales: { x: { grid: { color: gridC }, ticks: { color: fontC } }, y: { beginAtZero: true, grid: { color: gridC }, ticks: { color: fontC, precision: 0 } } },
+          },
+        });
+        if (_corrPrioChart) { _corrPrioChart.destroy(); _corrPrioChart = null; }
+        _corrPrioChart = new Chart(c2.getContext('2d'), {
+          type: 'bar',
+          data: { labels: ['Alta','Média','Baixa'], datasets: [
+            { label: 'Concluídas', data: [cp.HIGH||0, cp.MEDIUM||0, cp.LOW||0], backgroundColor: 'rgba(99,102,241,0.75)', borderRadius: 3 },
+            { label: 'Atrasadas',  data: [lp.HIGH||0, lp.MEDIUM||0, lp.LOW||0], backgroundColor: 'rgba(245,158,11,0.75)',  borderRadius: 3 },
+          ]},
+          options: { responsive: true, maintainAspectRatio: false, animation: false,
+            plugins: { legend: { labels: { color: fontC, font: { size: 10 } } } },
+            scales: { x: { grid: { color: gridC }, ticks: { color: fontC } }, y: { beginAtZero: true, grid: { color: gridC }, ticks: { color: fontC, precision: 0 } } },
+          },
+        });
+      }
+
       /**
        * Calcula saúde do equipamento via IA (Groq / Llama 3.1).
        * Recebe dados REAIS preenchidos pelo técnico e retorna JSON.
@@ -18963,6 +20487,28 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
         btn.innerHTML = '🔄 Gerar Análise Preditiva';
       }
  
+      /** Exibe (ou oculta) o banner de OS Críticas Abertas no Painel Operacional. */
+      function renderCriticalOsBanner() {
+        const banner = document.getElementById('criticalOsBanner');
+        const countEl = document.getElementById('criticalOsCount');
+        const listEl  = document.getElementById('criticalOsList');
+        if (!banner) return;
+        const allTasks = (typeof getGlobalTasks === 'function' ? getGlobalTasks() : window.tasks) || [];
+        const critOpen = allTasks.filter(t =>
+          (t.priority || '').toUpperCase() === 'CRITICAL' &&
+          (t.status || '').toUpperCase() !== 'DONE'
+        );
+        if (critOpen.length === 0) { banner.style.display = 'none'; return; }
+        banner.style.display = '';
+        if (countEl) countEl.textContent = critOpen.length;
+        if (listEl) {
+          listEl.innerHTML = critOpen.slice(0, 5).map(t => {
+            const safe = (t.title || 'Sem título').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            return `<span style="padding:3px 10px;border-radius:10px;background:rgba(220,38,38,0.12);color:#dc2626;font-size:11px;font-weight:600;cursor:pointer;" onclick="openTaskDetails(${t.id})">${safe}</span>`;
+          }).join('') + (critOpen.length > 5 ? `<span style="font-size:11px;color:#dc2626;">+${critOpen.length - 5} mais</span>` : '');
+        }
+      }
+
       async function loadStatistics() {
         try {
           // Primeiro: tentar calcular a partir do array local (instântaneo, sem network)
@@ -19132,13 +20678,24 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
             // ignore habits mini metrics errors
           }
           
-          // Renderizar gráfico de evolução semanal
-          // Usar requestAnimationFrame para garantir que o layout do canvas esteja calculado
+          // Renderizar gráficos do dashboard
+          renderCriticalOsBanner();
           requestAnimationFrame(() => {
             renderProductivityChart();
             try { renderOSPerWeekChart(window._osChartPeriod || 'week'); } catch(e) { console.warn('os chart:', e); }
             try { updateDashboardExtras(getGlobalTasks ? getGlobalTasks() : (window.tasks || [])); } catch(e) { console.warn('dashboard extras:', e); }
             try { renderRiskMatrixChart(); } catch(e) { console.warn('risk chart:', e); }
+            try { renderStatusChart(); } catch(e) { console.warn('status chart:', e); }
+            try { renderHourlyChart(); } catch(e) { console.warn('hourly chart:', e); }
+            try { renderForecastChart(); } catch(e) { console.warn('forecast chart:', e); }
+            try { renderEquipmentFailureForecast(); } catch(e) { console.warn('equip failure chart:', e); }
+            renderAnomalyPanel().catch(e => console.warn('anomaly panel:', e));
+            renderCorrelationCard().catch(e => console.warn('correlation:', e));
+            renderInsightsCard().catch(e => console.warn('insights:', e));
+            renderPriorityChart().catch(e => console.warn('priority chart:', e));
+            renderClassificationCard().catch(e => console.warn('classification:', e));
+            renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
+            try { renderExecutiveSummary(); } catch(e) { console.warn('executive summary:', e); }
           });
         } catch (error) {
           console.error("Erro ao carregar estatísticas:", error);
@@ -19258,6 +20815,16 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
         try { renderProductivityChart(); } catch(e) {}
         try { renderOSPerWeekChart(window._osChartPeriod || 'week'); } catch(e) {}
         try { renderRiskMatrixChart(); } catch(e) {}
+        try { renderStatusChart(); } catch(e) {}
+        try { renderHourlyChart(); } catch(e) {}
+        try { renderForecastChart(); } catch(e) {}
+        try { renderEquipmentFailureForecast(); } catch(e) {}
+        renderAnomalyPanel().catch(e => console.warn('anomaly panel:', e));
+        renderCorrelationCard().catch(e => console.warn('correlation:', e));
+        renderInsightsCard().catch(e => console.warn('insights:', e));
+        renderPriorityChart().catch(e => console.warn('priority chart:', e));
+        renderClassificationCard().catch(e => console.warn('classification:', e));
+        renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
         const mv = document.getElementById('maintenanceView');
         if (mv && mv.classList.contains('active')) loadMaintenanceView();
         closeMaintCalendar();
@@ -21084,16 +22651,37 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
         window.showView = function(viewName) {
           originalShowView(viewName);
           if (viewName === 'dashboard') {
+            renderCriticalOsBanner();
             // Ação dupla: rAF garante layout pós display:block, 500ms garante pós animação completa
             requestAnimationFrame(() => {
               try { renderProductivityChart(); } catch(e) {}
               try { renderOSPerWeekChart(); } catch(e) {}
               try { renderRiskMatrixChart(); } catch(e) {}
+              try { renderStatusChart(); } catch(e) {}
+              try { renderHourlyChart(); } catch(e) {}
+              try { renderForecastChart(); } catch(e) {}
+              try { renderEquipmentFailureForecast(); } catch(e) {}
+              renderAnomalyPanel().catch(e => console.warn('anomaly panel:', e));
+              renderCorrelationCard().catch(e => console.warn('correlation:', e));
+              renderInsightsCard().catch(e => console.warn('insights:', e));
+              renderPriorityChart().catch(e => console.warn('priority chart:', e));
+              renderClassificationCard().catch(e => console.warn('classification:', e));
+              renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
             });
             setTimeout(() => {
               try { renderProductivityChart(); } catch(e) { console.warn('prod chart:', e); }
               try { renderOSPerWeekChart(); } catch(e) { console.warn('os chart:', e); }
               try { renderRiskMatrixChart(); } catch(e) { console.warn('risk chart:', e); }
+              try { renderStatusChart(); } catch(e) { console.warn('status chart:', e); }
+              try { renderHourlyChart(); } catch(e) { console.warn('hourly chart:', e); }
+              try { renderForecastChart(); } catch(e) { console.warn('forecast chart:', e); }
+              try { renderEquipmentFailureForecast(); } catch(e) { console.warn('equip failure chart:', e); }
+              renderAnomalyPanel().catch(e => console.warn('anomaly panel:', e));
+              renderCorrelationCard().catch(e => console.warn('correlation:', e));
+              renderInsightsCard().catch(e => console.warn('insights:', e));
+              renderPriorityChart().catch(e => console.warn('priority chart:', e));
+              renderClassificationCard().catch(e => console.warn('classification:', e));
+              renderRecommendationsCard().catch(e => console.warn('recommendations:', e));
             }, 500);
           }
           if (viewName === 'equipment') {

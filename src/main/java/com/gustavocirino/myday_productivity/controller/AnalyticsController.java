@@ -1,6 +1,10 @@
 package com.gustavocirino.myday_productivity.controller;
 
 import com.gustavocirino.myday_productivity.dto.AnalyticsSummaryDTO;
+import com.gustavocirino.myday_productivity.dto.AnomalyDTO;
+import com.gustavocirino.myday_productivity.dto.ClassificationDTO;
+import com.gustavocirino.myday_productivity.dto.ForecastDTO;
+import com.gustavocirino.myday_productivity.dto.RecommendationDTO;
 import com.gustavocirino.myday_productivity.dto.TaskStatsDTO;
 import com.gustavocirino.myday_productivity.model.Task;
 import com.gustavocirino.myday_productivity.service.ai.analytics.AnalyticsService;
@@ -141,5 +145,140 @@ public class AnalyticsController {
         log.info("📊 GET /api/analytics/summary - Resumo de {} a {}", start, end);
         AnalyticsSummaryDTO summary = analyticsService.getSummary(start, end);
         return ResponseEntity.ok(summary);
+    }
+
+    /**
+     * GET /api/analytics/hourly
+     * Distribuição de OS por hora do dia (0–23)
+     */
+    @Operation(summary = "Distribuição por hora do dia", description = "Contagem de OSs agrupadas por hora de criação")
+    @ApiResponse(responseCode = "200", description = "Distribuição calculada com sucesso")
+    @GetMapping("/hourly")
+    public ResponseEntity<Map<Integer, Long>> getHourlyDistribution() {
+        log.info("📊 GET /api/analytics/hourly - Distribuição por hora");
+        Map<Integer, Long> distribution = analyticsService.getHourlyDistribution();
+        return ResponseEntity.ok(distribution);
+    }
+
+    /**
+     * GET /api/analytics/tags
+     * Distribuição de OS por tag/categoria
+     */
+    @Operation(summary = "Distribuição por tag/categoria", description = "Contagem de OSs por tag")
+    @ApiResponse(responseCode = "200", description = "Distribuição calculada com sucesso")
+    @GetMapping("/tags")
+    public ResponseEntity<Map<String, Long>> getTagDistribution() {
+        log.info("📊 GET /api/analytics/tags - Distribuição por tag");
+        Map<String, Long> distribution = analyticsService.getTagDistribution();
+        return ResponseEntity.ok(distribution);
+    }
+
+    /**
+     * GET /api/analytics/trend?days=N
+     * Série temporal diária dos últimos N dias: { date, created, done }
+     */
+    @Operation(summary = "Tendência diária (série temporal)", description = "Array de pontos diários com OS criadas e concluídas por dia")
+    @ApiResponse(responseCode = "200", description = "Tendência calculada com sucesso")
+    @GetMapping("/trend")
+    public ResponseEntity<List<Map<String, Object>>> getDailyTrend(
+            @RequestParam(defaultValue = "14") int days) {
+        log.info("📊 GET /api/analytics/trend - Últimos {} dias", days);
+        List<Map<String, Object>> trend = analyticsService.getDailyTrend(days);
+        return ResponseEntity.ok(trend);
+    }
+
+    /**
+     * GET /api/analytics/forecast?historicDays=14&horizon=7
+     * Previsão de produtividade: série histórica + projeção via regressão linear.
+     * Retorna tendência (up/stable/down), média diária e pontos do forecast.
+     */
+    @Operation(summary = "Previsão de produtividade (forecasting)", description = "Regressão linear sobre OS concluídas/dia. Retorna série histórica e projeção futura com tendência.")
+    @ApiResponse(responseCode = "200", description = "Previsão calculada com sucesso")
+    @GetMapping("/forecast")
+    public ResponseEntity<ForecastDTO> getForecast(
+            @RequestParam(defaultValue = "14") int historicDays,
+            @RequestParam(defaultValue = "7")  int horizon) {
+        log.info("📈 GET /api/analytics/forecast - histórico={} dias, horizonte={} dias", historicDays, horizon);
+        ForecastDTO forecast = analyticsService.getForecast(historicDays, horizon);
+        return ResponseEntity.ok(forecast);
+    }
+
+    /**
+     * GET /api/analytics/anomalies?days=30
+     * Detecta anomalias estatísticas de produtividade:
+     * PRODUCTIVITY_DROP | TASK_ACCUMULATION | LATE_SPIKE | IDLE_PERIOD
+     */
+    @Operation(
+        summary = "Detecção de anomalias de produtividade",
+        description = "Analisa série temporal dos últimos N dias e sinaliza: quedas de produtividade, picos de abertura de OS, acúmulo de atrasos e períodos inativos."
+    )
+    @ApiResponse(responseCode = "200", description = "Lista de anomalias detectadas (pode ser vazia)")
+    @GetMapping("/anomalies")
+    public ResponseEntity<java.util.List<AnomalyDTO>> getAnomalies(
+            @RequestParam(defaultValue = "30") int days) {
+        log.info("🔍 GET /api/analytics/anomalies - janela={} dias", days);
+        java.util.List<AnomalyDTO> anomalies = analyticsService.detectAnomalies(days);
+        return ResponseEntity.ok(anomalies);
+    }
+
+    /**
+     * GET /api/analytics/correlation
+     * Retorna correlações operacionais: conclusões/atrasos por dia da semana e por prioridade.
+     */
+    @GetMapping("/correlation")
+    public ResponseEntity<java.util.Map<String, Object>> getCorrelation() {
+        log.info("📈 GET /api/analytics/correlation");
+        return ResponseEntity.ok(analyticsService.getCorrelation());
+    }
+
+    /**
+     * GET /api/analytics/insights
+     * Gera resumo executivo em linguagem natural via GROQ analisando todos os dados operacionais.
+     * Retorna: { "narrative": "texto gerado pela IA" }
+     */
+    @Operation(
+        summary = "Insights narrativos via IA",
+        description = "GROQ analisa todos os dados operacionais e retorna um resumo executivo em linguagem natural com insights e recomendações acionáveis."
+    )
+    @ApiResponse(responseCode = "200", description = "Narrative gerada com sucesso")
+    @GetMapping("/insights")
+    public ResponseEntity<java.util.Map<String, String>> getInsights() {
+        log.info("🧠 GET /api/analytics/insights");
+        String narrative = analyticsService.getInsights();
+        return ResponseEntity.ok(java.util.Map.of("narrative", narrative));
+    }
+
+    /**
+     * GET /api/analytics/classify
+     * Classifica as OS abertas por categoria técnica usando IA (GROQ) com fallback por palavras-chave.
+     * Categorias: ELETRICA | MECANICA | HIDRAULICA | INSTRUMENTACAO | CIVIL | OUTRO
+     */
+    @Operation(
+        summary = "Classificação automática de OS por categoria técnica",
+        description = "Usa IA para classificar cada OS aberta em categoria técnica (Elétrica, Mecânica, etc.) com nível de confiança."
+    )
+    @ApiResponse(responseCode = "200", description = "Lista de classificações calculada com sucesso")
+    @GetMapping("/classify")
+    public ResponseEntity<List<ClassificationDTO>> classifyTasks() {
+        log.info("🏷️ GET /api/analytics/classify");
+        List<ClassificationDTO> result = analyticsService.classifyTasks();
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * GET /api/analytics/recommendations
+     * Gera recomendações estruturadas de otimização operacional via GROQ.
+     * Retorna: [{ action, impact, priority, category }]
+     */
+    @Operation(
+        summary = "Recomendações de otimização operacional via IA",
+        description = "GROQ analisa dados operacionais e retorna 4 recomendações estruturadas com impacto, urgência e área afetada."
+    )
+    @ApiResponse(responseCode = "200", description = "Recomendações geradas com sucesso")
+    @GetMapping("/recommendations")
+    public ResponseEntity<List<RecommendationDTO>> getRecommendations() {
+        log.info("💡 GET /api/analytics/recommendations");
+        List<RecommendationDTO> result = analyticsService.getRecommendations();
+        return ResponseEntity.ok(result);
     }
 }

@@ -41,8 +41,13 @@ public class TaskService {
     // ==================== CRUD OPERATIONS ====================
 
     /**
-     * GET ALL - Busca todas as tarefas de um usuário e converte para DTO
+     * GET ALL - Busca todas as tarefas de um usuário e converte para DTO.
+     * 
+     * Aplica automaticamente a transição SCHEDULED → LATE para OS com prazo vencido
+     * e que ainda não foram concluídas. Assim a tarefa nunca "desaparece" da lista —
+     * ela permanece visível como LATE até ser marcada como DONE.
      */
+    @Transactional
     public List<TaskResponseDTO> getAllTasks(User owner) {
         if (owner == null || owner.getId() == null) {
             throw new IllegalArgumentException("Usuário obrigatório para listar tarefas.");
@@ -65,6 +70,22 @@ public class TaskService {
                 merged.addAll(orphans);
                 tasks = merged;
             }
+        }
+
+        // ────────────────────────────────────────────────────────────────────
+        // AUTO-LATE: Transição automática SCHEDULED → LATE
+        // Toda OS agendada cujo prazo (endTime) já passou sem ser concluída
+        // muda para LATE, garantindo que continue visível no painel de OS.
+        // ────────────────────────────────────────────────────────────────────
+        LocalDateTime now = LocalDateTime.now();
+        List<Task> overdue = tasks.stream()
+                .filter(t -> t.getStatus() == TaskStatus.SCHEDULED
+                        && t.getEndTime() != null
+                        && t.getEndTime().isBefore(now))
+                .collect(Collectors.toList());
+        if (!overdue.isEmpty()) {
+            overdue.forEach(t -> t.setStatus(TaskStatus.LATE));
+            taskRepository.saveAll(overdue);
         }
 
         return tasks.stream()
@@ -283,6 +304,7 @@ public class TaskService {
                 .orElseThrow(() -> new RuntimeException("Task não encontrada"));
 
         task.setStatus(TaskStatus.DONE);
+        task.setCompletedAt(java.time.LocalDateTime.now());
         Task updated = taskRepository.save(task);
         return toDTO(updated);
     }
@@ -300,6 +322,7 @@ public class TaskService {
         // restaurar o status SCHEDULED.)
         boolean hasSchedule = task.getStartTime() != null;
         task.setStatus(hasSchedule ? TaskStatus.SCHEDULED : TaskStatus.PENDING);
+        task.setCompletedAt(null);
 
         Task updated = taskRepository.save(task);
         return toDTO(updated);
@@ -327,7 +350,8 @@ public class TaskService {
                 task.getRiskLevel(),
                 task.getPredictedFailureDate(),
                 task.getFailureProbability(),
-                task.getAiAnalysisSummary());
+                task.getAiAnalysisSummary(),
+                task.getCompletedAt());
     }
 
     /**
@@ -362,12 +386,8 @@ public class TaskService {
             if (task.getStatus() == TaskStatus.PENDING) {
                 task.setStatus(TaskStatus.SCHEDULED);
             }
-        } else if (dto.startTime() == null && dto.endTime() == null && task.getStartTime() != null) {
-            // Se remover os horários, volta para PENDING
-            task.setStartTime(null);
-            task.setEndTime(null);
-            task.setStatus(TaskStatus.PENDING);
         }
+        // Nota: atualização parcial (ex: só prioridade) não remove horários existentes
 
         Task updated = taskRepository.save(task);
         return toDTO(updated);
