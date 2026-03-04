@@ -7876,7 +7876,8 @@
             <div style="display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:11px;color:var(--text-secondary);flex-wrap:wrap;">
               <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#10b981;display:inline-block;border-radius:2px;"></span> Histórico (concluídas)</span>
               <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:#0055FF;display:inline-block;border-radius:2px;border:1px dashed #0055FF;"></span> Projeção</span>
-              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:rgba(245,158,11,0.8);display:inline-block;border-radius:2px;"></span> Linha do modelo</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:3px;background:rgba(245,158,11,0.8);display:inline-block;border-radius:2px;"></span> Tendência Linear</span>
+              <span style="display:flex;align-items:center;gap:4px;"><span style="width:20px;height:9px;background:rgba(0,85,255,0.1);display:inline-block;border-radius:2px;border:1px dashed rgba(0,85,255,0.4);"></span> IC 90% (confiança)</span>
             </div>
           </div>
 
@@ -7945,15 +7946,20 @@
                 <div style="position:relative;height:160px;"><canvas id="priorityDistChart"></canvas></div>
               </div>
             </div>
+            <div id="corrMatrixGrid"></div>
           </div>
 
           <!-- INSIGHTS IA CARD -->
           <div class="chart-container ind-chart-card" style="grid-column: span 2;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                Análise Inteligente — Insights IA
-              </span>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  Recomendação Personalizada — Insights IA
+                  <span style="font-size:9px;background:rgba(139,92,246,0.15);padding:1px 7px;border-radius:4px;color:#8b5cf6;font-weight:700;">Tóp. 7</span>
+                </span>
+                <span style="font-size:11px;color:var(--text-secondary);padding-left:22px;">Narrativa gerada com base em histórico e padrões de comportamento</span>
+              </div>
               <span data-insights-badge style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(139,92,246,0.12);color:#8b5cf6;font-weight:600;">GROQ</span>
             </div>
             <div id="insightsNarrative" style="font-size:13px;line-height:1.75;color:var(--text-primary);padding:14px 16px;border-radius:8px;background:color-mix(in srgb,#8b5cf6 8%,transparent);border-left:4px solid #8b5cf6;min-height:56px;">
@@ -8013,10 +8019,14 @@
           <!-- RECOMENDAÇÕES DE OTIMIZAÇÃO E HISTÓRICO (Pontos 6 e 7 — Otimização e Sistemas de Recomendação) -->
           <div class="chart-container ind-chart-card" style="grid-column: span 2;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-                Recomendações de Otimização e Histórico de Manutenção
-              </span>
+              <div style="display:flex;flex-direction:column;gap:2px;">
+                <span style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                  Otimização Operacional — Recomendações por IA
+                  <span style="font-size:9px;background:rgba(16,185,129,0.15);padding:1px 7px;border-radius:4px;color:#10b981;font-weight:700;">Tóp. 6</span>
+                </span>
+                <span style="font-size:11px;color:var(--text-secondary);padding-left:22px;">Sugestões automáticas para melhorar eficiência, desempenho e reduzir backlog</span>
+              </div>
               <span data-rec-badge style="font-size:11px;padding:2px 8px;border-radius:10px;background:rgba(16,185,129,0.12);color:#10b981;font-weight:600;">GROQ</span>
             </div>
             <div id="recommendationsBody" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;min-height:60px;">
@@ -8054,7 +8064,7 @@
               </div>
             </div>
             <div style="border-top:1px solid var(--border-color);padding-top:12px;">
-              <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;font-weight:600;">Gráfico de Cotovelo (Elbow) — Inércia por K</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;font-weight:600;">Gráfico de Cotovelo (Elbow) — Coesão dos Grupos por K</div>
               <div style="position:relative;height:110px;"><canvas id="elbowChart"></canvas></div>
               <div style="font-size:10px;color:var(--text-secondary);margin-top:4px;text-align:center;">O &quot;cotovelo&quot; indica o K ideal — onde aumentar K traz pouco ganho de coesão</div>
             </div>
@@ -19420,7 +19430,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         const r2El    = document.getElementById('forecastR2Score');
         if (r2El) {
           r2El.style.display  = '';
-          r2El.textContent    = `R² ${(r2Score * 100).toFixed(0)}%`;
+          r2El.textContent    = `Ajuste: R²=${(r2Score * 100).toFixed(0)}%`;
           const r2C = r2Score >= 0.75 ? '#10b981' : r2Score >= 0.45 ? '#f59e0b' : '#ef4444';
           r2El.style.background = r2Score >= 0.75 ? 'rgba(16,185,129,0.15)' : r2Score >= 0.45 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)';
           r2El.style.color      = r2C;
@@ -19429,6 +19439,25 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
         // Linha do modelo: retrocast (histórico) + forecast (projeção futura)
         const modelLine = allLabels.map((_, i) => parseFloat(Math.max(0, hb + hm * i).toFixed(2)));
+
+        // === INTERVALO DE CONFIANÇA (IC 90%) ===
+        // Faixa sombreada ao redor da projeção — incerteza cresce com a distância
+        const _std = data.stdDev ?? Math.max(0.5, Math.sqrt(histValues.reduce((s,v) => s + (v - sY/Math.max(1,hn))**2, 0) / Math.max(1, hn)));
+        const _lastHist = histValues.length > 0 ? histValues[histValues.length - 1] : 0;
+        const upperConf = allLabels.map((_, i) => {
+          if (i < histLabels.length - 1) return null;
+          if (i === histLabels.length - 1) return _lastHist;
+          const fi = i - histLabels.length;
+          const fv = data.forecast[fi]?.done ?? 0;
+          return parseFloat(Math.max(0, fv + 1.65 * _std * Math.sqrt(1 + fi * 0.3)).toFixed(2));
+        });
+        const lowerConf = allLabels.map((_, i) => {
+          if (i < histLabels.length - 1) return null;
+          if (i === histLabels.length - 1) return _lastHist;
+          const fi = i - histLabels.length;
+          const fv = data.forecast[fi]?.done ?? 0;
+          return parseFloat(Math.max(0, fv - 1.65 * _std * Math.sqrt(1 + fi * 0.3)).toFixed(2));
+        });
 
         const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark-mode');
         const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.06)';
@@ -19445,7 +19474,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
                 data: [...histValues, ...new Array(forecastLabels.length).fill(null)],
                 borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)',
                 tension: 0.3, fill: true, pointRadius: 4, pointHoverRadius: 6,
-                borderWidth: 2,
+                borderWidth: 2, order: 1,
               },
               {
                 label: 'Projeção',
@@ -19453,15 +19482,31 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
                 borderColor: '#0055FF', backgroundColor: 'rgba(0,85,255,0.05)',
                 borderDash: [6, 4], tension: 0.3, fill: false,
                 pointRadius: 4, pointHoverRadius: 6, borderWidth: 2,
-                pointStyle: 'triangle',
+                pointStyle: 'triangle', order: 1,
               },
               {
-                label: 'Linha do modelo',
+                label: 'Tendência Linear',
                 data: modelLine,
                 borderColor: 'rgba(245,158,11,0.75)',
                 backgroundColor: 'transparent',
                 borderDash: [3, 3], tension: 0, fill: false,
-                pointRadius: 0, pointHoverRadius: 0, borderWidth: 1.5,
+                pointRadius: 0, pointHoverRadius: 0, borderWidth: 1.5, order: 1,
+              },
+              {
+                label: 'IC 90% sup.',
+                data: upperConf,
+                borderColor: 'rgba(0,85,255,0.22)',
+                backgroundColor: 'rgba(0,85,255,0.07)',
+                borderDash: [2, 3], tension: 0.35, fill: '+1',
+                pointRadius: 0, pointHoverRadius: 0, borderWidth: 1, order: 2,
+              },
+              {
+                label: 'IC 90% inf.',
+                data: lowerConf,
+                borderColor: 'rgba(0,85,255,0.22)',
+                backgroundColor: 'transparent',
+                borderDash: [2, 3], tension: 0.35, fill: false,
+                pointRadius: 0, pointHoverRadius: 0, borderWidth: 1, order: 2,
               },
             ],
           },
@@ -19470,6 +19515,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             plugins: {
               legend: { display: false },
               tooltip: {
+                filter: item => item.dataset.label !== 'IC 90% sup.' && item.dataset.label !== 'IC 90% inf.',
                 callbacks: {
                   label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y ?? 0} OS`,
                 },
@@ -20092,14 +20138,14 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             ? '<span style="font-size:10px;color:var(--text-secondary);margin-top:3px;display:block;">Nenhum termo das regras foi detectado no texto da OS.</span>'
             : '';
           const xaiDetail = '<tr id="' + xaiId + '" style="display:none;"><td colspan="5" style="padding:8px 14px 10px 24px;background:var(--card-bg);border-bottom:1px solid var(--border-color);">' +
-            '<div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;font-weight:600;">&#128269; Por que classificado como <span style="color:' + predCfg.color + ';">' + predCfg.label + '</span>?</div>' +
+            '<div style="font-size:11px;color:var(--text-secondary);margin-bottom:4px;font-weight:600;">Por que classificado como <span style="color:' + predCfg.color + ';">' + predCfg.label + '</span>?</div>' +
             '<div style="display:flex;flex-wrap:wrap;gap:3px;">' + factorsHtml + '</div>' + termsHtml + noMatchHint + '</td></tr>';
           const mainRow = '<tr style="border-bottom:1px solid var(--border-color);">' +
             '<td style="padding:7px 10px;font-size:12px;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + safeTitle + '">' + safeTitle + '</td>' +
             '<td style="padding:7px 10px;"><span style="font-size:11px;padding:2px 9px;border-radius:9px;background:' + realCfg.bg + ';color:' + realCfg.color + ';font-weight:600;">' + realCfg.label + '</span></td>' +
             '<td style="padding:7px 10px;"><span style="font-size:11px;padding:2px 9px;border-radius:9px;background:' + predCfg.bg + ';color:' + predCfg.color + ';font-weight:600;">' + predCfg.label + '</span></td>' +
             '<td style="padding:7px 10px;font-size:11px;font-weight:700;color:' + confColor + ';">' + c.conf + '%</td>' +
-            '<td style="padding:7px 10px;text-align:center;">' + hitMark + ' <button onclick="(function(){var r=document.getElementById(\'' + xaiId + '\');r.style.display=r.style.display===\'\'?\'none\':\'\';})();" title="Explicar decisão" style="background:none;border:1px solid var(--border-color);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;color:#6366f1;margin-left:4px;">&#128269;</button></td>' +
+            '<td style="padding:7px 10px;text-align:center;">' + hitMark + ' <button onclick="(function(){var r=document.getElementById(\'' + xaiId + '\');r.style.display=r.style.display===\'\'?\'none\':\'\';})();" title="Explicar decisão" style="background:none;border:1px solid var(--border-color);border-radius:5px;padding:2px 6px;font-size:10px;cursor:pointer;color:#6366f1;margin-left:4px;">Por quê?</button></td>' +
             '</tr>';
           return mainRow + xaiDetail;
         };
@@ -20116,7 +20162,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             '<div style="font-size:11px;padding:2px 10px;border-radius:8px;background:' + (accuracy >= 80 ? 'rgba(16,185,129,0.12)' : accuracy >= 60 ? 'rgba(245,158,11,0.12)' : 'rgba(239,68,68,0.12)') + ';color:' + accColor + ';font-weight:700;">' + (accuracy >= 80 ? '&#x2713; Alta acurácia' : accuracy >= 60 ? '&#9888; Acurácia moderada' : '&#9888; Revisar regras') + '</div>' +
           '</div>' +
           '<details style="margin-bottom:10px;border:1px solid var(--border-color);border-radius:8px;padding:8px 12px;">' +
-            '<summary style="font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer;list-style:none;">&#128200; Feature Importance (XAI Global)</summary>' +
+            '<summary style="font-size:11px;font-weight:700;color:var(--text-secondary);cursor:pointer;list-style:none;">Como a IA classifica — Fatores mais frequentes</summary>' +
             '<div style="margin-top:8px;">' + featureBars + '</div>' +
           '</details>' +
           '<table style="width:100%;border-collapse:collapse;">' +
@@ -20125,7 +20171,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               '<th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Real</th>' +
               '<th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Prevista IA</th>' +
               '<th style="text-align:left;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Conf.</th>' +
-              '<th style="text-align:center;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">&#10003;/&#10007; &nbsp;XAI</th>' +
+              '<th style="text-align:center;padding:6px 10px;font-size:11px;color:var(--text-secondary);font-weight:600;">Acerto? / Por quê?</th>' +
             '</tr></thead>' +
             '<tbody>' + visibleRows + '</tbody>' +
             expandSection +
@@ -20304,7 +20350,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             data: {
               labels: kRange.map(k => 'K=' + k),
               datasets: [{
-                label: 'Inércia',
+                label: 'Coesão dos Grupos',
                 data: inertias,
                 borderColor: '#a855f7',
                 backgroundColor: 'rgba(168,85,247,0.08)',
@@ -20320,7 +20366,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               responsive: true, maintainAspectRatio: false, animation: false,
               plugins: {
                 legend: { display: false },
-                tooltip: { callbacks: { label: t => 'Inércia: ' + t.parsed.y.toFixed(2) } }
+                tooltip: { callbacks: { label: t => 'Coesão: ' + t.parsed.y.toFixed(2) } }
               },
               scales: {
                 x: { grid: { color: gridCE }, ticks: { color: fontCE, font: { size: 9 } } },
@@ -20824,11 +20870,11 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           const delta         = afterScore - rawScore;
 
           const stages = [
-            { icon: '📥', label: 'Ingestão',       desc: total + ' OS lidas da base de dados', done: true,  ms: 0   },
-            { icon: '✅', label: 'Validação',      desc: invalidDt.length + ' datas inválidas normalizadas · ' + dupTasks.length + ' duplicatas sinalizadas', done: true, ms: 400  },
-            { icon: '🧹', label: 'Limpeza',        desc: dupTasks.length + ' registros mesclados · formatos padronizados (ISO 8601)', done: true,  ms: 900  },
-            { icon: '✨', label: 'Enriquecimento', desc: (noTitle.length - afterNoTitle) + ' títulos inferidos · ' + (noDesc.length - afterNoDesc) + ' descrições completadas pela IA', done: true, ms: 1500 },
-            { icon: '📊', label: 'Normalização',   desc: 'Prioridades padronizadas · campos de data unificados · pipeline concluído', done: true, ms: 2100 },
+            { icon: '01', label: 'Ingestão',       desc: total + ' OS lidas da base de dados', done: true,  ms: 0   },
+            { icon: '02', label: 'Validação',      desc: invalidDt.length + ' datas inválidas normalizadas · ' + dupTasks.length + ' duplicatas sinalizadas', done: true, ms: 400  },
+            { icon: '03', label: 'Limpeza',        desc: dupTasks.length + ' registros mesclados · formatos padronizados (ISO 8601)', done: true,  ms: 900  },
+            { icon: '04', label: 'Enriquecimento', desc: (noTitle.length - afterNoTitle) + ' títulos inferidos · ' + (noDesc.length - afterNoDesc) + ' descrições completadas pela IA', done: true, ms: 1500 },
+            { icon: '05', label: 'Normalização',   desc: 'Prioridades padronizadas · campos de data unificados · pipeline concluído', done: true, ms: 2100 },
           ];
 
           const rawCol   = rawScore  >= 80 ? '#10b981' : rawScore  >= 50 ? '#f59e0b' : '#ef4444';
@@ -20859,12 +20905,12 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             '<div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">Etapas do Pipeline</div>' +
             stages.map((s, i) =>
               '<div id="_pipeStage' + i + '" style="display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border-color);opacity:0.35;transition:opacity .4s;">' +
-              '<span style="font-size:16px;min-width:20px;">' + s.icon + '</span>' +
+              '<span style="font-size:10px;font-weight:700;min-width:20px;color:var(--text-secondary);font-variant-numeric:tabular-nums;">' + s.icon + '</span>' +
               '<div style="flex:1;">' +
               '<div style="font-size:12px;font-weight:600;color:var(--text-primary);">' + s.label + '</div>' +
               '<div style="font-size:11px;color:var(--text-secondary);margin-top:1px;">' + s.desc + '</div>' +
               '</div>' +
-              '<span id="_pipeCheck' + i + '" style="font-size:13px;min-width:16px;">⏳</span>' +
+              '<span id="_pipeCheck' + i + '" style="font-size:11px;min-width:16px;color:var(--text-secondary);">–</span>' +
               '</div>'
             ).join('') +
             '</div>' +
@@ -20895,7 +20941,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               const el = document.getElementById('_pipeStage' + i);
               const ck = document.getElementById('_pipeCheck' + i);
               if (el) el.style.opacity = '1';
-              if (ck) ck.textContent = '✅';
+              if (ck) { ck.textContent = '\u2713'; ck.style.color = '#10b981'; }
               // No último estágio, revela o score final
               if (i === stages.length - 1) {
                 setTimeout(() => {
@@ -20973,8 +21019,6 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
             // ===== IMPACTO QUANTITATIVO =====
             // Constantes do setor elétrico/industrial (médias de mercado)
-            const CUSTO_CORRETIVA   = 2800; // R$ por OS corretiva
-            const CUSTO_PREVENTIVA  = 480;  // R$ por OS preventiva
             const HORAS_CORRETIVA   = 8;    // horas por OS corretiva
             const HORAS_PREVENTIVA  = 2;    // horas por OS preventiva
 
@@ -20982,15 +21026,12 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             const totalPrevMaint = Object.values(log).reduce((acc, days) => acc + (Array.isArray(days) ? days.length : 0), 0);
 
             // Sem SpinOps (baseline): todas seriam corretivas
-            const baselineCusto = totalPrevMaint * CUSTO_CORRETIVA;
             const baselineHoras = totalPrevMaint * HORAS_CORRETIVA;
 
-            // Com SpinOps: preventivas custariam muito menos
-            const comSpinCusto = totalPrevMaint * CUSTO_PREVENTIVA;
+            // Com SpinOps: preventivas demandam menos tempo
             const comSpinHoras = totalPrevMaint * HORAS_PREVENTIVA;
 
-            // Economia gerada
-            const custoEvitado = baselineCusto - comSpinCusto;
+            // Horas poupadas
             const horasPoupadas = baselineHoras - comSpinHoras;
 
             // Retrabalho evitado: % de OS fechadas dentro do prazo (menos retrabalho)
@@ -21016,7 +21057,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             const recs = [];
             if (backlogPct > 40) recs.push({ col: '#ef4444', text: open.length + ' OS em aberto (' + backlogPct + '% do total). Priorizar conclusão para reduzir desperdício de tempo.' });
             if (slaPct < 60)     recs.push({ col: '#f59e0b', text: 'Apenas ' + slaPct + '% das OS resolvidas no prazo. Cada dia de atraso aumenta o custo médio em ~18%.' });
-            if (stalled.length > 0) recs.push({ col: '#f97316', text: stalled.length + ' OS paradas >14 dias. Custo estimado de imobilização: R$ ' + (stalled.length * 420).toLocaleString('pt-BR') + '.' });
+            if (stalled.length > 0) recs.push({ col: '#f97316', text: stalled.length + ' OS paradas há mais de 14 dias. Indicam gargalos no fluxo de atendimento — revisar prioridades.' });
             if (totalPrevMaint === 0) recs.push({ col: '#8b5cf6', text: 'Nenhuma manutenção preventiva registrada. Cadastre manutenções para ativar o rastreamento de economia.' });
             if (recs.length === 0) recs.push({ col: '#10b981', text: 'Operação dentro dos parâmetros ideais. Manter o ritmo atual de manutenção preventiva.' });
 
@@ -21029,7 +21070,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
 
             const impactCard = (icon, label, before, after, unit, col, tip) =>
               '<div style="padding:11px;border-radius:9px;background:var(--bg-secondary);">' +
-              '<div style="font-size:10px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">' + icon + ' ' + label + '</div>' +
+              '<div style="font-size:10px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">' + (icon ? icon + ' ' : '') + label + '</div>' +
               '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
               '<span style="font-size:12px;color:var(--text-secondary);text-decoration:line-through;">' + before + ' ' + unit + '</span>' +
               '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="' + col + '" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
@@ -21060,17 +21101,14 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               // Impacto quantitativo antes x depois
               '<div>' +
               '<div style="font-size:11px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">Impacto Estimado — Sem SpinOps vs. Com SpinOps</div>' +
-              '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;">' +
-              impactCard('⏱️', 'Horas de Intervenção',
+              '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">' +
+              impactCard('', 'Horas de Intervenção',
                 (baselineHoras).toLocaleString('pt-BR'), (comSpinHoras).toLocaleString('pt-BR') + ' (−' + horasPoupadas.toLocaleString('pt-BR') + ')', 'h', '#10b981',
                 totalPrevMaint > 0 ? horasPoupadas + ' horas poupadas com preventivas vs. corretivas' : 'Registre manutenções para ativar este cálculo') +
-              impactCard('💰', 'Custo de Manutenção',
-                'R$ ' + (baselineCusto / 1000).toFixed(1) + 'k', 'R$ ' + (comSpinCusto / 1000).toFixed(1) + 'k (−R$ ' + (custoEvitado / 1000).toFixed(1) + 'k)', '', '#10b981',
-                totalPrevMaint > 0 ? 'Referência: R$' + CUSTO_PREVENTIVA + '/prev. vs R$' + CUSTO_CORRETIVA + '/corretiva (média setor)' : 'Baseado em ' + totalPrevMaint + ' eventos de manutenção registrados') +
-              impactCard('🔄', 'Retrabalho',
+              impactCard('', 'Retrabalho',
                 '~' + Math.max(0, 30) + '%', '~' + Math.max(0, 100 - retrabalhoPct) + '% menos', 'de OS reabertas', '#8b5cf6',
                 'Estimado pela taxa de cumprimento de SLA (' + slaPct + '% dentro de 5 dias)') +
-              impactCard('🌱', 'OS Preventivas',
+              impactCard('', 'OS Preventivas',
                 '0 (baseline)', String(totalPrevMaint), 'evento(s) registrado(s)', '#16a34a',
                 preventivasIdentificadas + ' OS de baixa prioridade antecipadas antes de falha crítica') +
               '</div></div>' +
@@ -21279,7 +21317,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             labels: epochLabels,
             datasets: [
               { label: 'Acurácia (%)', data: [...emptyAcc],  borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,0.08)', fill: true,  tension: 0.4, pointRadius: 2, borderWidth: 2, yAxisID: 'yAcc' },
-              { label: 'Loss',         data: [...emptyLoss], borderColor: '#f97316', backgroundColor: 'transparent',             fill: false, tension: 0.4, pointRadius: 2, borderWidth: 2, yAxisID: 'yLoss', borderDash: [5,3] }
+              { label: 'Erro de Aprendizado', data: [...emptyLoss], borderColor: '#f97316', backgroundColor: 'transparent',             fill: false, tension: 0.4, pointRadius: 2, borderWidth: 2, yAxisID: 'yLoss', borderDash: [5,3] }
             ]
           },
           options: {
@@ -21291,7 +21329,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             scales: {
               x:     { grid: { color: gridC }, ticks: { color: fontC, font: { size: 9 }, maxTicksLimit: 10 }, title: { display: true, text: 'Época', color: fontC, font: { size: 9 } } },
               yAcc:  { type: 'linear', position: 'left',  grid: { color: gridC }, ticks: { color: '#8b5cf6', font: { size: 9 } }, min: 0, max: 100, title: { display: true, text: 'Acurácia %', color: '#8b5cf6', font: { size: 9 } } },
-              yLoss: { type: 'linear', position: 'right', grid: { display: false }, ticks: { color: '#f97316', font: { size: 9 } }, min: 0, max: 1.6, title: { display: true, text: 'Loss', color: '#f97316', font: { size: 9 } } }
+              yLoss: { type: 'linear', position: 'right', grid: { display: false }, ticks: { color: '#f97316', font: { size: 9 } }, min: 0, max: 1.6, title: { display: true, text: 'Erro de Aprendizado', color: '#f97316', font: { size: 9 } } }
             }
           }
         });
@@ -21314,9 +21352,9 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           if (eEl) eEl.textContent = `Época ${epoch} / ${EPOCHS}`;
           if (sEl) {
             if (epoch <= 4)       sEl.textContent = 'Ajustando hiperparâmetros e inicializando vetores de peso...';
-            else if (epoch <= 10) sEl.textContent = `Gradiente descendente em execução... Acurácia: ${accVal.toFixed(1)}% | Loss: ${lossVal.toFixed(3)}`;
+            else if (epoch <= 10) sEl.textContent = `Gradiente descendente em execução... Acurácia: ${accVal.toFixed(1)}% | Erro: ${lossVal.toFixed(3)}`;
             else if (epoch <= 16) sEl.textContent = `Convergindo — variação de loss < 1e-3... Acurácia: ${accVal.toFixed(1)}%`;
-            else                  sEl.textContent = `✓ Modelo estabilizado — Acurácia: ${accVal.toFixed(1)}% | Loss: ${lossVal.toFixed(3)}`;
+            else                  sEl.textContent = `✓ Modelo estabilizado — Acurácia: ${accVal.toFixed(1)}% | Erro: ${lossVal.toFixed(3)}`;
           }
 
           if (epoch >= EPOCHS) {
@@ -21336,7 +21374,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
               const fC = (v, good, ok) => v >= good ? '#10b981' : v >= ok ? '#f59e0b' : '#ef4444';
               const chip = (lbl, val, c) => `<div style="text-align:center;padding:8px 6px;border-radius:8px;background:var(--bg-secondary);border:1px solid var(--border-color);"><div style="font-size:14px;font-weight:800;color:${c};">${val}</div><div style="font-size:10px;color:var(--text-secondary);margin-top:2px;">${lbl}</div></div>`;
               const valAcc = finalAcc; const valF1 = Math.round(finalAcc * 0.94); const valPrec = Math.round(finalAcc * 0.97); const valLoss = finalLoss;
-              fEl.innerHTML = chip('Acurácia', valAcc + '%', fC(valAcc,80,60)) + chip('F1-Score', valF1 + '%', fC(valF1,78,58)) + chip('Precisão', valPrec + '%', fC(valPrec,80,60)) + chip('Loss final', valLoss, valLoss <= 0.3 ? '#10b981' : valLoss <= 0.6 ? '#f59e0b' : '#ef4444');
+              fEl.innerHTML = chip('Acurácia', valAcc + '%', fC(valAcc,80,60)) + chip('F1-Score', valF1 + '%', fC(valF1,78,58)) + chip('Precisão', valPrec + '%', fC(valPrec,80,60)) + chip('Erro Final', valLoss, valLoss <= 0.3 ? '#10b981' : valLoss <= 0.6 ? '#f59e0b' : '#ef4444');
               // ===== CONFUSION MATRIX =====
               const cmCats = ['CRÍTICA','ALTA','MÉDIA','BAIXA'];
               const cmN = cmCats.length;
@@ -21638,6 +21676,69 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             scales: { x: { grid: { color: gridC }, ticks: { color: fontC } }, y: { beginAtZero: true, grid: { color: gridC }, ticks: { color: fontC, precision: 0 } } },
           },
         });
+
+        // === MATRIZ DE CORRELAÇÃO DE PEARSON (Tópico 1 — Análise e Exploração de Dados) ===
+        const mcEl = document.getElementById('corrMatrixGrid');
+        if (mcEl && typeof getGlobalTasks === 'function') {
+          const allT = getGlobalTasks();
+          const NOW2 = new Date(); NOW2.setHours(0,0,0,0);
+          const N_DAYS = 14;
+          const sCr = [], sCo = [], sCt = [], sLt = [], sMt = [];
+          const mLog2 = typeof getMaintLog === 'function' ? getMaintLog() : {};
+          for (let d = N_DAYS - 1; d >= 0; d--) {
+            const dt2 = new Date(NOW2); dt2.setDate(NOW2.getDate() - d);
+            const ds2 = dt2.toISOString().slice(0,10);
+            sCr.push(allT.filter(t => (t.createdAt||'').slice(0,10) === ds2).length);
+            sCo.push(allT.filter(t => (t.status||'').toUpperCase() === 'DONE' && ((t.completedAt||t.createdAt)||'').slice(0,10) === ds2).length);
+            sCt.push(allT.filter(t => (t.priority||'').toUpperCase() === 'CRITICAL' && (t.createdAt||'').slice(0,10) === ds2).length);
+            sLt.push(allT.filter(t => (t.status||'').toUpperCase() === 'LATE' && ((t.endTime||t.createdAt)||'').slice(0,10) === ds2).length);
+            let mc2 = 0; Object.values(mLog2).forEach(days => { if (Array.isArray(days) && days.includes(ds2)) mc2++; }); sMt.push(mc2);
+          }
+          const pearson = (a, b) => {
+            const n2 = a.length; const ma = a.reduce((s,v)=>s+v,0)/n2; const mb = b.reduce((s,v)=>s+v,0)/n2;
+            const num = a.reduce((s,v,i) => s + (v-ma)*(b[i]-mb), 0);
+            const da = Math.sqrt(a.reduce((s,v)=>s+(v-ma)**2,0)); const db = Math.sqrt(b.reduce((s,v)=>s+(v-mb)**2,0));
+            return (da < 1e-9 || db < 1e-9) ? 0 : parseFloat((num/(da*db)).toFixed(2));
+          };
+          const vars = [
+            { label: 'OS Criadas',    data: sCr },
+            { label: 'OS Concluídas', data: sCo },
+            { label: 'OS Críticas',   data: sCt },
+            { label: 'OS Atrasadas',  data: sLt },
+            { label: 'Manutenções',   data: sMt },
+          ];
+          const matrix = vars.map(r => vars.map(c => pearson(r.data, c.data)));
+          const cell = (v, isDiag) => {
+            const abs = Math.abs(v);
+            const col = isDiag ? '#6366f1' : abs >= 0.6 ? (v > 0 ? '#10b981' : '#ef4444') : abs >= 0.3 ? '#f59e0b' : '#94a3b8';
+            const bg  = isDiag ? 'rgba(99,102,241,0.1)' : abs >= 0.6 ? (v > 0 ? 'rgba(16,185,129,0.12)' : 'rgba(239,68,68,0.12)') : abs >= 0.3 ? 'rgba(245,158,11,0.1)' : 'transparent';
+            const fw  = isDiag || abs >= 0.5 ? 700 : 400;
+            return `<td style="padding:7px 5px;text-align:center;border-radius:4px;background:${bg};font-weight:${fw};color:${col};font-size:11px;">${isDiag ? '—' : v.toFixed(2)}</td>`;
+          };
+          mcEl.innerHTML = `<div style="margin-top:14px;padding:12px 14px;border-radius:10px;background:rgba(99,102,241,0.05);border:1px solid rgba(99,102,241,0.18);">
+            <div style="font-size:11px;font-weight:700;color:#6366f1;margin-bottom:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+              Matriz de Correlação de Pearson — Últimos ${N_DAYS} dias
+              <span style="font-size:9px;background:rgba(99,102,241,0.12);padding:1px 7px;border-radius:4px;color:#6366f1;">Tóp. 1 — Exploração de Dados</span>
+            </div>
+            <div style="overflow-x:auto;"><table style="border-collapse:separate;border-spacing:3px;width:100%;min-width:360px;">
+              <thead><tr>
+                <th style="padding:3px 6px;font-size:9px;color:var(--text-secondary);text-align:right;font-weight:600;">\u2193 Real / \u2192 Prev</th>
+                ${vars.map(v => `<th style="padding:3px 6px;font-size:9px;color:#6366f1;font-weight:700;text-align:center;white-space:nowrap;">${v.label}</th>`).join('')}
+              </tr></thead>
+              <tbody>${matrix.map((row,i) => `<tr>
+                <td style="padding:4px 8px;font-size:10px;font-weight:600;color:var(--text-secondary);white-space:nowrap;">${vars[i].label}</td>
+                ${row.map((v,j) => cell(v, i===j)).join('')}
+              </tr>`).join('')}</tbody>
+            </table></div>
+            <div style="font-size:10px;color:var(--text-secondary);margin-top:6px;">
+              <span style="color:#10b981;font-weight:600;">verde = correlação positiva</span> &nbsp;|&nbsp;
+              <span style="color:#ef4444;font-weight:600;">vermelho = correlação negativa</span> &nbsp;|&nbsp;
+              <span style="color:#f59e0b;font-weight:600;">amarelo = fraca</span> &nbsp;|&nbsp;
+              — = diagonal (auto-correlação) &nbsp;|&nbsp; limiar: ±0.3 fraca · ±0.6 forte
+            </div>
+          </div>`;
+        }
       }
 
       /**

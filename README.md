@@ -1,408 +1,312 @@
-﻿# MyDay Productivity — Sistema de Gestão de Manutenção Preditiva
-
-![Java](https://img.shields.io/badge/Java-21-orange) 
+﻿# SpinOps — Gestão de Manutenção Preditiva Industrial
+![Java](https://img.shields.io/badge/Java-21-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)
-![MySQL](https://img.shields.io/badge/MySQL-8.0+-blue)
-![Playwright](https://img.shields.io/badge/Tests-Playwright-red)
+![MySQL](https://img.shields.io/badge/MySQL-8.0-blue)
+![PWA](https://img.shields.io/badge/PWA-offline--ready-purple)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
-
-> Projeto desenvolvido para o **Hackathon InovSpin**, abordando os desafios **#4 (Manutenção Preditiva)**, **#6 (Digitalização de Processos)** e **#8 (Análise de Falhas)**.
+> Projeto desenvolvido para o **Hackathon InovSpin** — solução que cobre os **15 desafios** propostos, com aplicação de Inteligência Artificial em gestão de ativos elétricos industriais.
+**SpinOps** é uma plataforma web progressiva (PWA) para gestão inteligente de ativos elétricos industriais, com diagnóstico por IA, ordens de serviço, calendário de manutenção e dashboard analítico com 15 módulos de inteligência artificial.
 ---
 ## Sumário
-- [Visão Geral](#visão-geral)
 - [Funcionalidades](#funcionalidades)
-- [Arquitetura](#arquitetura)
+- [Requisitos](#requisitos)
 - [Como Executar](#como-executar)
-- [Demonstração Rápida](#demonstração-rápida)
-- [Testes Automatizados](#testes-automatizados)
+  - [Opção A — Docker (recomendado)](#opção-a--docker-recomendado)
+  - [Opção B — Sem Docker](#opção-b--sem-docker)
 - [Configuração de IA](#configuração-de-ia)
-- [Performance e Escalabilidade](#performance-e-escalabilidade)
-- [Estrutura de Diretórios](#estrutura-de-diretórios)
-- [Tecnologias Utilizadas](#tecnologias-utilizadas)
----
-## Visão Geral
-O **MyDay Productivity** é uma plataforma web progressiva (PWA) para gestão de manutenção de ativos elétricos industriais. O sistema combina:
-- **Diagnóstico com IA** via modelos de linguagem (Groq/Llama 3.1 + Gemini) para calcular saúde percentual de equipamentos com base em dados reais de campo.
-- **Ordens de serviço** com fluxo completo (abertura → execução → fechamento) e priorização inteligente.
-- **Calendário de manutenção** com visão semanal e gestão de tarefas por equipamento.
-- **Dashboard analítico** com gráficos de tendência de saúde ao longo de 6 meses.
-- **Notificações push** para alertas de manutenção vencida.
-- **Modo offline** via Service Worker (PWA).
+- [Testes](#testes)
+- [Arquitetura](#arquitetura)
+- [Desafios do Hackathon](#desafios-do-hackathon)
 ---
 ## Funcionalidades
-### Gestão de Equipamentos
-- Cadastro de ativos elétricos (transformadores, motores, disjuntores, painéis, geradores, UPS, relés, capacitores, QDCs)
-- Diagnóstico de saúde com IA: modelo analisa tipo, tempo de uso, histórico de manutenções e condição visual
-- Simulação de sensores históricos por equipamento (temperatura, corrente, tensão, vibração, etc.)
-- Indicadores de tendência com sparklines por sensor
-### Ordens de Serviço (OS)
-- Criação manual ou sugerida pela IA
-- Prioridade por cor customizável
-- Filtros por status e técnico responsável
-- Drag-and-drop entre colunas (Pendente → Em Andamento → Concluído)
-### Dashboard e Análise
-- **Gráfico de tendência de saúde** — evolução de todos os equipamentos nos últimos 6 meses
-- Matriz de risco e distribuição de criticidade
-- Visão geral de OS abertas, concluídas e vencidas
-- Exportação de relatórios
-### Chat com IA
-- Assistente técnico para consultas sobre equipamentos cadastrados
-- Histórico de conversas persistido por sessão
-- Suporte a markdown nas respostas
-### Calendário
-- Visão mensal e semanal das manutenções programadas
-- Alocação de técnicos por OS
-- Alertas de prazo crítico
+| Módulo | Descrição |
+|--------|-----------|
+| Equipamentos | Cadastro, diagnóstico de saúde com IA, simulação de sensores históricos |
+| Ordens de Serviço | Criação, priorização, drag-and-drop, filtros por status |
+| Dashboard IA | 15 cards analíticos: clustering, classificação explicável, anomalias, previsão de falhas |
+| Heatmap de Atividade | Calendário de 14 semanas de OS criadas/concluídas |
+| Evolução de Saúde | Gráfico de linha 8 semanas por equipamento com limiares crítico/atenção |
+| Calendário | Manutenções programadas por equipamento com visão mensal/semanal |
+| Chat IA | Assistente técnico (Groq/Llama 3.1) com fallback local |
+| PWA | Funciona offline via Service Worker |
+| Push Notifications | Alertas de manutenção vencida (Web Push VAPID) |
+---
+## Requisitos
+### Opção A — Docker (mais simples)
+| Ferramenta | Versão mínima | Download |
+|-----------|--------------|---------|
+| Java JDK | 21 | [adoptium.net](https://adoptium.net/temurin/releases/?version=21) |
+| Docker Desktop | qualquer | [docker.com/get-started](https://www.docker.com/get-started/) |
+### Opção B — Sem Docker
+| Ferramenta | Versão mínima | Download |
+|-----------|--------------|---------|
+| Java JDK | 21 | [adoptium.net](https://adoptium.net/temurin/releases/?version=21) |
+| MySQL Server | 8.0 | [dev.mysql.com/downloads](https://dev.mysql.com/downloads/mysql/) |
+> **Maven não precisa ser instalado** — o projeto inclui o wrapper `mvnw` (Linux/Mac) e `mvnw.cmd` (Windows).
+---
+## Como Executar
+### Verificar pré-requisitos
+```bash
+java -version
+# deve exibir: openjdk version "21.x.x" ...
+docker --version
+# (apenas Opção A) deve exibir: Docker version 24.x.x ...
+```
+Se `java -version` não funcionar, instale o JDK 21 e adicione `JAVA_HOME` ao PATH do sistema.
+---
+### Opção A — Docker (recomendado)
+> Inicia MySQL + aplicação com um único comando. Não requer configuração manual de banco.
+**1. Clone o repositório**
+```bash
+git clone <url-do-repositorio>
+cd myday-productivity
+```
+**2. Suba os containers**
+```bash
+docker-compose up -d
+```
+O Docker irá:
+- Baixar a imagem `mysql:8.0` e criar o banco `neurotask`
+- Compilar e executar a aplicação Spring Boot
+**3. Aguarde o startup (~60–90 segundos)**
+```bash
+docker-compose logs -f app
+# Aguarde a linha: Started MydayProductivityApplication in X seconds
+```
+**4. Acesse no navegador**
+```
+http://localhost:8080
+```
+**Parar a aplicação:**
+```bash
+docker-compose down
+```
+**Parar e apagar os dados do banco:**
+```bash
+docker-compose down -v
+```
+---
+### Opção B — Sem Docker
+#### 1. Clone o repositório
+```bash
+git clone <url-do-repositorio>
+cd myday-productivity
+```
+#### 2. Configure o MySQL
+Instale o MySQL 8.0, inicie o serviço e crie o banco:
+```sql
+-- Execute no cliente MySQL (mysql -u root -p):
+CREATE DATABASE IF NOT EXISTS neurotask
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+#### 3. Configure o arquivo de propriedades
+```bash
+# Linux / macOS
+cp src/main/resources/application.properties.example \
+   src/main/resources/application.properties
+# Windows (PowerShell)
+Copy-Item src\main\resources\application.properties.example `
+          src\main\resources\application.properties
+```
+Abra `src/main/resources/application.properties` e ajuste as credenciais:
+```properties
+# Se o MySQL estiver na porta padrão 3306, troque 3307 por 3306
+spring.datasource.url=jdbc:mysql://localhost:3307/neurotask?createDatabaseIfNotExist=true&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=senha123
+```
+#### 4. Execute a aplicação
+```bash
+# Linux / macOS
+./mvnw spring-boot:run
+# Windows (PowerShell ou Prompt de Comando)
+mvnw.cmd spring-boot:run
+```
+Na primeira execução, o Maven baixa as dependências (~2–3 min). As seguintes são mais rápidas.
+Aguarde a mensagem no console:
+```
+Started MydayProductivityApplication in X.XXX seconds
+```
+#### 5. Acesse no navegador
+```
+http://localhost:8080
+```
+**Porta 8080 já em uso?**
+```bash
+# Linux / macOS
+./mvnw spring-boot:run -Dserver.port=8081
+# Windows
+mvnw.cmd spring-boot:run -Dserver.port=8081
+# Acesse: http://localhost:8081
+```
+---
+## Solução de Problemas
+| Sintoma | Causa provável | Solução |
+|---------|---------------|---------|
+| `java: command not found` | JDK não instalado ou `JAVA_HOME` ausente | Instale o JDK 21 e configure o `PATH` |
+| `Connection refused` no MySQL | Serviço MySQL não está rodando | Inicie o MySQL ou use `docker-compose up -d` |
+| Erro de credenciais no banco | `username`/`password` errado | Revise `application.properties` |
+| Porta 8080 ocupada | Outro processo na mesma porta | Use `-Dserver.port=8081` |
+| Container não sobe | Docker Desktop não iniciado | Abra o Docker Desktop e aguarde o daemon iniciar |
+| Erro de compilação no Maven | Versão do Java incompatível | Confirme `java -version` = 21+ |
+**Ver logs detalhados:**
+```bash
+# Docker
+docker-compose logs app
+# Local — filtrar erros
+./mvnw spring-boot:run 2>&1 | findstr /i "error"   # Windows
+./mvnw spring-boot:run 2>&1 | grep -i "error"       # Linux/macOS
+```
+---
+## Configuração de IA
+O SpinOps usa a **API Groq** (gratuita) com o modelo `llama-3.1-8b-instant` para diagnóstico de equipamentos e chat técnico.
+**Sem chave de API:** todas as funcionalidades continuam disponíveis usando algoritmos locais de fallback.
+**Para ativar a IA com Groq:**
+1. Obtenha uma chave gratuita em [console.groq.com](https://console.groq.com)
+2. No aplicativo, clique no ícone de engrenagem (Configurações)
+3. Cole a chave no campo **"Chave de API (Groq)"**
+4. A chave é salva no `localStorage` do navegador — não trafega para o servidor
+**Alternativa via variável de ambiente:**
+```bash
+# Linux / macOS
+export OPENAI_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxx
+./mvnw spring-boot:run
+# Windows (PowerShell)
+$env:OPENAI_API_KEY = "gsk_xxxxxxxxxxxxxxxxxxxx"
+mvnw.cmd spring-boot:run
+```
+---
+## Testes
+### Testes unitários (JUnit 5)
+```bash
+# Linux / macOS
+./mvnw test
+# Windows
+mvnw.cmd test
+```
+### Testes E2E com Playwright
+```bash
+# Pré-requisito: Node.js instalado (https://nodejs.org)
+npm install -g playwright
+# Com a aplicação rodando em localhost:8080:
+cd qa
+node playwright-smoke.mjs
+# Com URL personalizada:
+BASE_URL=http://localhost:8081 node playwright-smoke.mjs
+```
+Log salvo em `qa/smoke-last.log`.
 ---
 ## Arquitetura
 ```
-+------------------------------------------------+
-|              Navegador (PWA)                   |
-|  HTML + CSS + Vanilla JS  ·  Service Worker    |
-|  Chart.js  ·  Lucide Icons  ·  LocalStorage    |
-+------------------+-----------------------------+
-                   | REST / Fetch API
-+------------------v-----------------------------+
-|           Spring Boot Backend                  |
-|  Java 21  ·  Spring Web  ·  Spring Data JPA    |
-|  MySQL 8.0+                                      |
-+------------------------------------------------+
-|  Servicos de IA                                |
-|  +-- Groq API  (llama-3.1-8b-instant)          |
-|  +-- Google Gemini  (fallback)                 |
-+------------------------------------------------+
+Navegador (PWA)
+  HTML + CSS + Vanilla JS  ·  Service Worker  ·  Chart.js
+           |
+           |  HTTP / REST
+           v
+  Spring Boot 3.5 (Java 21)
+    controller/ · service/ · model/ · repository/ · dto/
+           |
+           |  JPA / Hibernate
+           v
+        MySQL 8.0
+           |
+           |  HTTPS
+           v
+  Groq API — llama-3.1-8b-instant  (+ fallback local)
 ```
-### Módulos do Backend (`src/main/java/.../`)
-| Pacote | Responsabilidade |
-|--------|------------------|
-| `controller/` | Endpoints REST (tarefas, equipamentos, IA, push) |
-| `service/` | Lógica de negócio, integração com Groq/Gemini |
-| `model/` | Entidades JPA |
-| `repository/` | Spring Data JPA repositories |
-| `dto/` | Transfer objects e envelopes de resposta |
-| `config/` | CORS, cliente HTTP, segurança |
----
-## Como Executar
-### Pré-requisitos
-- **Java 21** (JDK)
-- **Maven 3.9+** (ou use o wrapper `mvnw` incluído)
-- **MySQL 8.0+** (local ou via Docker)
-- Conexão com internet para chamadas de IA (opcional — funciona offline com fallback)
-
-### Configuração do Banco de Dados
-#### Opção 1: MySQL Local
-```bash
-# 1. Instale MySQL 8.0+ ou use Docker:
-docker run --name mysql-neurotask -e MYSQL_ROOT_PASSWORD=senha123 -e MYSQL_DATABASE=neurotask -p 3307:3306 -d mysql:8.0
-
-# 2. Copie o arquivo de configuração:
-cp src/main/resources/application.properties.example src/main/resources/application.properties
-
-# 3. Edite as credenciais se necessário (padrão: root/senha123)
-```
-
-#### Opção 2: MySQL Existente
-```bash
-# 1. Crie o banco de dados:
-mysql -u root -p -e "CREATE DATABASE neurotask;"
-
-# 2. Copie e configure o application.properties:
-cp src/main/resources/application.properties.example src/main/resources/application.properties
-
-# 3. Ajuste usuário/senha no arquivo copiado
-```
-
-### Passos para Executar
-#### 🚀 Setup Automático (Recomendado)
-Execute o script de setup automático para configurar tudo em um comando:
-
-```bash
-# Linux/macOS
-chmod +x setup.sh
-./setup.sh
-
-# Windows
-setup.bat
-```
-
-O script irá:
-- ✅ Verificar pré-requisitos (Java 21+, Docker)
-- ✅ Iniciar MySQL na porta 3307
-- ✅ Configurar application.properties
-- ✅ Compilar e iniciar a aplicação
-
-#### 🐳 Docker Compose (Alternativa)
-```bash
-# Com Docker e Docker Compose instalados:
-docker-compose up -d
-
-# Acesse: http://localhost:8080
-# Parar: docker-compose down
-```
-
-#### 🔧 Setup Manual
-```bash
-# 1. Clone o repositório
-git clone <url-do-repositorio>
-cd myday-productivity
-
-# 2. Configure o banco de dados (veja acima)
-
-# 3. (Opcional) Configure a chave de API do Groq
-#    Veja a secao "Configuracao de IA" abaixo
-
-# 4. Execute a aplicacao
-./mvnw spring-boot:run          # Linux/macOS
-mvnw.cmd spring-boot:run        # Windows
-
-# 5. Aguarde 30-60 segundos para startup completo
-#    Você verá "Started MydayProductivityApplication" no console
-
-# 6. Acesse no navegador
-#    http://localhost:8080
-```
-
-## Demonstração Rápida
-### Funcionalidades para Testar Imediatamente
-Após o startup completo, explore estas funcionalidades principais:
-
-#### 🏠 **Dashboard Principal**
-- Acesse http://localhost:8080
-- Visão geral dos equipamentos e saúde do sistema
-- Gráficos de tendência e métricas em tempo real
-
-#### 🔧 **Gestão de Equipamentos**
-1. Menu lateral → **Equipamentos**
-2. Clique **"Novo Equipamento"**
-3. Preencha dados de um transformador ou motor
-4. Salve e veja o diagnóstico automático
-
-#### 🤖 **Diagnóstico com IA**
-1. Na lista de equipamentos, selecione um item
-2. Clique em **"Analisar Saúde"** 
-3. Aguarde o diagnóstico da IA (com ou sem API key)
-4. Veja sugestões de manutenção
-
-#### 📋 **Ordens de Serviço**
-1. Menu → **Ordens de Serviço**
-2. Clique **"Criar OS"**
-3. Arraste entre colunas: Pendente → Em Andamento → Concluído
-4. Teste priorização por cores
-
-#### 💬 **Chat Técnico com IA**
-1. Ícone de chat no canto inferior
-2. Pergunte: *"Como manutenho um transformador de 1000kVA?"*
-3. Veja resposta técnica com markdown
-
-#### 📅 **Calendário de Manutenção**
-1. Menu → **Calendário**
-2. Clique em uma data para agendar manutenção
-3. Visualize tarefas por equipamento
-
-### Dados de Teste
-- **Usuário:** Sistema cria automaticamente no primeiro acesso
-- **Equipamentos:** Exemplos pré-cadastrados no startup
-- **IA:** Funciona offline com algoritmos fallback
-
-### URLs de Acesso
-- **Aplicação:** http://localhost:8080
-- **API Documentation:** http://localhost:8080/swagger-ui.html (quando disponível)
-
-### Solução de Problemas
-#### Problemas Comuns e Soluções
-
-##### Porta 8080 já está em uso?
-```bash
-# Use outra porta:
-./mvnw spring-boot:run -Dserver.port=8081
-# Acesse: http://localhost:8081
-```
-
-##### Docker MySQL não inicia?
-```bash
-# Verifique se porta 3307 está livre:
-netstat -an | grep 3307
-
-# Remova container antigo:
-docker rm -f mysql-neurotask
-
-# Recrie o container:
-docker run --name mysql-neurotask -e MYSQL_ROOT_PASSWORD=senha123 -e MYSQL_DATABASE=neurotask -p 3307:3306 -d mysql:8.0
-```
-
-##### Aplicação não conecta no MySQL?
-```bash
-# Verifique logs do container:
-docker logs mysql-neurotask
-
-# Teste conexão manual:
-mysql -h 127.0.0.1 -P 3307 -u root -psenha123 neurotask
-
-# Verifique se o banco foi criado:
-mysql -h 127.0.0.1 -P 3307 -u root -psenha123 -e "SHOW DATABASES;"
-```
-
-##### Erro de Java/Maven?
-```bash
-# Limpe e recompile:
-mvn clean install
-
-# Verifique versões mínimas:
-java -version  # precisa ser Java 21+
-mvn -version   # precisa ser Maven 3.9+
-```
-
-#### Diagnóstico Rápido
-```bash
-# Se falhar na inicialização:
-mvn clean install
-./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=dev"
-
-# Verificar conectividade MySQL:
-mysql -h localhost -P 3307 -u root -p
-
-# Verificar Java/Maven:
-java -version
-mvn -version
-```
-## Testes Automatizados
-### Testes E2E (Smoke Tests)
-O projeto inclui testes automatizados com Playwright para validar as funcionalidades principais:
-
-```bash
-# 1. Instale o Playwright (se ainda não tiver)
-npm install -g playwright
-
-# 2. Execute os testes smoke
-cd qa
-node playwright-smoke.mjs
-
-# 3. Com URL customizada (se usar porta diferente)
-BASE_URL=http://localhost:8081 node playwright-smoke.mjs
-```
-
-**O que os testes verificam:**
-- ✅ Carregamento da aplicação
-- ✅ Funcionalidades principais da UI
-- ✅ API endpoints críticos
-- ✅ Fluxos completos de usuário
-- ✅ Integração com IA
-
-**Logs dos testes:** `qa/smoke-last.log`
----
-## Configuração de IA
-O MyDay Productivity utiliza a **API do Groq** (gratuita) com o modelo `llama-3.1-8b-instant` para diagnósticos de equipamentos e chat técnico. Para ativar:
-1. Obtenha uma chave gratuita em [console.groq.com](https://console.groq.com)
-2. No aplicativo, acesse **Configurações** (ícone de engrenagem)
-3. Cole a chave no campo **"Chave de API (Groq)"**
-4. A chave é salva localmente no navegador (`localStorage`)
-> **Sem chave:** o sistema usa um algoritmo de fallback local para estimar a saúde dos equipamentos. Todas as demais funcionalidades continuam disponíveis.
-### Variável de ambiente (alternativa)
-```bash
-# Configure via variável de ambiente antes de executar:
-export OPENAI_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-./mvnw spring-boot:run
-```
-
-### Arquivo de Configuração
-O projeto usa `application.properties` para configuração. Um arquivo exemplo está disponível em:
-```
-src/main/resources/application.properties.example
-```
-
-Copie este arquivo para `src/main/resources/application.properties` e ajuste as configurações conforme necessário.
----
-## Estrutura de Diretórios
+### Estrutura de diretórios
 ```
 myday-productivity/
-+-- src/
-|   +-- main/
-|   |   +-- java/com/gustavocirino/myday_productivity/
-|   |   |   +-- MydayProductivityApplication.java   # Entry point
-|   |   |   +-- config/                             # CORS, AI client
-|   |   |   +-- controller/                         # REST endpoints
-|   |   |   +-- dto/                                # Request/Response DTOs
-|   |   |   +-- exception/                          # Handlers globais
-|   |   |   +-- model/                              # Entidades JPA
-|   |   |   +-- repository/                         # Spring Data repos
-|   |   |   +-- service/                            # Logica + IA
-|   |   +-- resources/
-|   |       +-- application.properties
-|   |       +-- static/
-|   |           +-- index.html                      # SPA (toda a UI)
-|   |           +-- manifest.webmanifest            # PWA manifest
-|   |           +-- sw.js                           # Service Worker
-|   |           +-- css/                            # Folhas de estilo
-|   |           +-- js/                             # Scripts auxiliares
-|   +-- test/                                       # Testes JUnit 5
-+-- qa/
-|   +-- playwright-smoke.mjs                        # Smoke tests E2E
-+-- pom.xml
-+-- README.md
+├── src/
+│   ├── main/
+│   │   ├── java/.../myday_productivity/
+│   │   │   ├── MydayProductivityApplication.java
+│   │   │   ├── config/          # CORS, cliente HTTP
+│   │   │   ├── controller/      # Endpoints REST
+│   │   │   ├── dto/             # Request / Response DTOs
+│   │   │   ├── exception/       # Handlers globais
+│   │   │   ├── model/           # Entidades JPA
+│   │   │   ├── repository/      # Spring Data repos
+│   │   │   └── service/         # Lógica de negócio + IA
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       ├── application.properties.example
+│   │       └── static/
+│   │           ├── index.html          # SPA completa
+│   │           ├── manifest.webmanifest
+│   │           ├── sw.js               # Service Worker
+│   │           ├── css/
+│   │           └── js/
+│   └── test/                   # Testes JUnit 5
+├── qa/
+│   └── playwright-smoke.mjs   # Testes E2E
+├── docker-compose.yml
+├── pom.xml
+└── README.md
 ```
 ---
 ## Tecnologias Utilizadas
 | Camada | Tecnologia |
 |--------|-----------|
-| Backend | Spring Boot 3.5, Java 21, Spring Data JPA |
-| Banco de dados | MySQL 8.0+ |
-| Frontend | HTML5, CSS3, Vanilla JS (ES6+) |
+| Backend | Spring Boot 3.5 · Java 21 · Spring Data JPA · HikariCP |
+| Banco de dados | MySQL 8.0 |
+| Frontend | HTML5 · CSS3 · Vanilla JS ES6+ |
 | Gráficos | Chart.js |
-| Ícones | Lucide Icons |
-| IA | Groq API (llama-3.1-8b-instant), Google Gemini |
-| PWA | Service Worker, Web App Manifest |
-| Build | Maven 3.9 |
-| Testes | JUnit 5, Playwright (smoke) |
-## Performance e Escalabilidade
-### Métricas de Desempenho
-- **Startup time:** ~30 segundos
-- **Memória usage:** ~512MB (com MySQL)
-- **Concurrent users:** 100+ (testado)
-- **Database pool:** HikariCP otimizado
-- **PWA cache:** Service Worker para offline
-- **API response time:** <200ms (média)
-
-### Arquitetura Escalável
-```
-Frontend (PWA) → API REST → Service Layer → JPA → MySQL
-                      ↓
-                  AI Services (Groq/Gemini)
-                      ↓
-              Push Notifications (VAPID)
-```
-
-## Métricas do Projeto
-- **Código fonte:** ~15k linhas Java + ~8k linhas JS/HTML/CSS
-- **Test coverage:** 85% (unitários) + E2E completo
-- **Endpoints API:** 25+ REST endpoints
-- **Entidades JPA:** 8 entidades principais
-- **Tempo de desenvolvimento:** 2 semanas
-
-## Roadmap Futuro
-- [ ] Autenticação com OAuth2 (Google/Microsoft)
-- [ ] Dashboard em tempo real com WebSocket
-- [ ] Relatórios PDF exportáveis
-- [ ] Integração com SAP/ERP
-- [ ] Mobile app nativo (React Native)
-
-## Contribuição
-### Como Contribuir
-1. Fork o projeto
-2. Create branch: `git checkout -b feature/amazing-feature`
-3. Commit: `git commit -m 'Add amazing feature'`
-4. Push: `git push origin feature/amazing-feature`
-5. Pull Request
-
-### Licença
-Este projeto está licenciado sob a MIT License - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
+| IA | Groq API (llama-3.1-8b-instant) · fallback local |
+| PWA | Service Worker · Web App Manifest |
+| Build | Maven 3.9 (wrapper incluído — sem instalação) |
+| Testes | JUnit 5 · Playwright |
+| Containers | Docker · Docker Compose |
 ---
-## Desafios do Hackathon Atendidos
-### Desafio #4 — Manutenção Preditiva
-O módulo de **Saúde de Equipamentos** utiliza IA para analisar dados reais de campo (tempo de uso, histórico de manutenções, condição visual) e calcular um percentual de saúde com sugestões de ação. O gráfico de tendência mostra a evolução da saúde ao longo de 6 meses, permitindo identificar degradação precoce.
-### Desafio #6 — Digitalização de Processos
-Todo o fluxo de ordens de serviço (abertura, execução, fechamento, histórico) é digital e acessível via PWA, mesmo offline. O calendário de manutenção substitui planilhas e processos manuais.
-### Desafio #8 — Análise de Falhas
-O dashboard analítico consolida dados de todos os equipamentos em gráficos e métricas, permitindo identificar padrões de falha, equipamentos críticos e lacunas no plano de manutenção. O assistente de IA responde perguntas técnicas sobre os ativos cadastrados.
+## Desafios do Hackathon
+
+O SpinOps foi projetado para cobrir todos os 15 desafios do Hackathon InovSpin.
+
+### Desafio 1 — Análise e Exploração de Dados
+O dashboard apresenta correlação entre variáveis operacionais, matriz de Pearson interativa, heatmap de atividade de 14 semanas e gráficos de distribuição de OS. Os dados são transformados em insight visual de forma automática a cada carregamento.
+
+### Desafio 2 — Previsão e Forecasting
+O card **Previsão de Falhas** aplica regressão linear sobre o histórico de OS para gerar projeções futuras, com intervalo de confiança (IC 90%) desenhado no gráfico e badge de **Ajuste: R²** indicando a qualidade do modelo.
+
+### Desafio 3 — Detecção de Anomalias
+O card de **Detecção de Anomalias** identifica OS cujos padrões fogem do comportamento esperado via Z-score e IQR, gera alertas visuais de criticidade e explica o desvio detectado em linguagem natural.
+
+### Desafio 4 — Manutenção Preditiva
+O módulo de **Saúde de Equipamentos** analisa tipo do ativo, histórico de manutenções e condição visual com IA, gerando um índice de saúde com sugestões de ação. O gráfico de **Evolução de Saúde** (8 semanas) exibe a trajetória de cada equipamento com limiares de atenção (70%) e crítico (40%).
+
+### Desafio 5 — Classificação e Categorização
+O card **Classificação de OS** aplica um modelo de priorização supervisionada que categoriza cada OS em CRÍTICA / ALTA / MÉDIA / BAIXA com percentual de confiança. O botão **"Por quê?"** expande a explicação dos fatores que levaram àquela classificação.
+
+### Desafio 6 — Otimização e Recomendação
+O card **"Otimização Operacional — Recomendações por IA"** analisa os dados operacionais e gera recomendações automáticas priorizadas por impacto (ALTO / MÉDIO / BAIXO), visando reduzir gargalos e aumentar a eficiência da equipe de manutenção.
+
+### Desafio 7 — Sistemas de Recomendação
+O card **"Recomendação Personalizada — Insights IA"** gera insights personalizados via Groq (Llama 3.1) ou fallback local, justificando cada recomendação com base nos padrões históricos dos equipamentos cadastrados.
+
+### Desafio 8 — Visualização Inteligente de Dados
+O dashboard agrega 15 cards de IA com destaque automático de dados críticos, alertas visuais por limiar e resumos gerados dinamicamente. A barra de alertas sinaliza OS vencidas e equipamentos em estado crítico em tempo real.
+
+### Desafio 9 — Aprendizado Supervisionado
+O card **Treinamento do Modelo** simula o ciclo completo: inicialização de pesos, gradiente descendente por épocas, curva de Acurácia vs. Erro de Aprendizado, e ao final exibe a **Matriz de Confusão** com os resultados de validação.
+
+### Desafio 10 — Aprendizado Não Supervisionado
+O card **Clustering K-Means** agrupa OS por similaridade (tipo, prioridade, tempo de resolução) sem rótulos prévios. O **Gráfico de Cotovelo** auxilia na escolha do K ótimo e os grupos são apresentados com o perfil médio de cada cluster.
+
+### Desafio 11 — Simulação Inteligente
+O card **Simulação de Cenários** permite ao usuário ajustar parâmetros (eficiência da equipe, taxa de OS críticas, volume) e comparar visualmente o cenário atual com o simulado, projetando o impacto nas próximas semanas.
+
+### Desafio 12 — Tomada de Decisão Automatizada
+O motor de priorização automatiza a decisão de criticidade de cada OS com base em múltiplas variáveis (palavras-chave, histórico, equipamento, prazo). A **Matriz de Risco** cruza probabilidade e impacto para sugerir qual OS atender primeiro.
+
+### Desafio 13 — Segurança e Confiabilidade
+A **Matriz de Risco** monitora continuamente os equipamentos e OS, classificando-os em quadrantes de criticidade. Alertas automáticos são gerados para OS vencidas, equipamentos abaixo de 40% de saúde e picos anômalos de volume.
+
+### Desafio 14 — Processamento Inteligente de Dados
+O card **Qualidade dos Dados** implementa um pipeline de validação e enriquecimento: detecta campos ausentes, duplicatas, valores fora de faixa e datas inválidas, exibindo o índice de completude e os problemas encontrados antes da análise.
+
+### Desafio 15 — Sustentabilidade e Eficiência
+O card **Eficiência e Redução de Desperdício** analisa o índice de OS concluídas no prazo, tempo médio de resolução e taxa de retrabalho, identificando oportunidades de melhoria e apresentando métricas de impacto operacional.
+
 ---
 *Desenvolvido por Gustavo Cirino para o Hackathon InovSpin.*
