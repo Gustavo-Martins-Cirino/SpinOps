@@ -1,5 +1,6 @@
 package com.gustavocirino.myday_productivity.exception;
 
+import com.gustavocirino.myday_productivity.exception.TimeSlotConflictException;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,6 +126,32 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    /**
+     * Trata conflitos de horário com sugestão automática do próximo slot livre.
+     * Retorna HTTP 409 com suggestedStart e suggestedEnd para o frontend reagendar.
+     */
+    @ExceptionHandler(TimeSlotConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleTimeSlotConflict(TimeSlotConflictException ex) {
+        log.warn("⚠️ Conflito de horário detectado: {}", ex.getMessage());
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:00");
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("error", "Conflito de Horário");
+        body.put("message", ex.getMessage());
+        body.put("conflictingTask", ex.getConflictingTaskTitle());
+        body.put("conflict", true);
+
+        if (ex.getSuggestedStart() != null && ex.getSuggestedEnd() != null) {
+            body.put("suggestedStart", ex.getSuggestedStart().format(fmt));
+            body.put("suggestedEnd",   ex.getSuggestedEnd().format(fmt));
+        }
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
     /**

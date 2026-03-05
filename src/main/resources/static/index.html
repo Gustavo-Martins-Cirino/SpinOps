@@ -3636,117 +3636,142 @@
 
       .ai-suggestion-card {
         margin-top: 8px;
-        padding: 12px 14px;
         border-radius: 16px;
-        background:
-          radial-gradient(
-            circle at 0 0,
-            rgba(138, 180, 255, 0.18),
-            transparent 55%
-          ),
-          color-mix(in srgb, var(--bg-card) 82%, rgba(15, 23, 42, 0.9));
-        border: 1px solid rgba(148, 163, 184, 0.5);
-        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.55);
+        background: color-mix(in srgb, var(--bg-card) 88%, rgba(15, 23, 42, 0.9));
+        border: 1px solid rgba(138, 180, 255, 0.28);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
         backdrop-filter: blur(22px);
         -webkit-backdrop-filter: blur(22px);
+        overflow: hidden;
+      }
+
+      .ai-suggestion-card::before {
+        content: "";
+        display: block;
+        height: 3px;
+        background: linear-gradient(90deg, rgba(138, 180, 255, 0.9), rgba(100, 220, 180, 0.6));
+        border-radius: 16px 16px 0 0;
+      }
+
+      .ai-suggestion-card-inner {
+        padding: 14px 16px 14px;
       }
 
       .ai-suggestion-card.ai-suggestion-card--conflict {
-        background:
-          radial-gradient(
-            circle at 0 0,
-            rgba(251, 191, 36, 0.2),
-            transparent 55%
-          ),
-          color-mix(in srgb, var(--bg-card) 82%, rgba(15, 23, 42, 0.9));
-        border-color: rgba(251, 191, 36, 0.8);
+        border-color: rgba(251, 191, 36, 0.55);
+      }
+
+      .ai-suggestion-card.ai-suggestion-card--conflict::before {
+        background: linear-gradient(90deg, rgba(251, 191, 36, 0.9), rgba(251, 120, 36, 0.6));
       }
 
       .ai-suggestion-title {
-        font-size: 12px;
+        font-size: 10px;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text-secondary);
-        margin-bottom: 6px;
+        letter-spacing: 0.1em;
+        color: rgba(138, 180, 255, 0.85);
+        margin-bottom: 10px;
+      }
+
+      .ai-suggestion-card.ai-suggestion-card--conflict .ai-suggestion-title {
+        color: rgba(251, 191, 36, 0.9);
       }
 
       .ai-suggestion-body {
         display: flex;
         flex-direction: column;
-        gap: 2px;
-        margin-bottom: 10px;
+        gap: 4px;
+        margin-bottom: 14px;
       }
 
       .ai-suggestion-priority-tag {
         align-self: flex-start;
-        padding: 2px 8px;
+        padding: 3px 10px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 500;
-        margin-bottom: 4px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        letter-spacing: 0.02em;
       }
 
       .ai-suggestion-priority-tag.priority-low {
-        background: #e6f4ea;
-        color: var(--google-green);
+        background: rgba(52, 211, 153, 0.15);
+        border: 1px solid rgba(52, 211, 153, 0.4);
+        color: #34d399;
       }
 
       .ai-suggestion-priority-tag.priority-medium {
-        background: #fef7e0;
-        color: #f9ab00;
+        background: rgba(251, 191, 36, 0.15);
+        border: 1px solid rgba(251, 191, 36, 0.4);
+        color: #fbbf24;
       }
 
       .ai-suggestion-priority-tag.priority-high {
-        background: #fce8e6;
-        color: var(--google-red);
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #f87171;
       }
 
       .ai-suggestion-task {
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 700;
         color: var(--text-primary);
+        line-height: 1.3;
       }
 
       .ai-suggestion-time {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--text-secondary);
+        margin-top: 2px;
       }
 
       .ai-suggestion-actions {
         display: flex;
         gap: 8px;
         justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255,255,255,0.07);
       }
 
       .ai-suggestion-btn {
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(148, 163, 184, 0.7);
-        background: rgba(15, 23, 42, 0.2);
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background: rgba(255,255,255,0.05);
         color: var(--text-primary);
         font-size: 12px;
+        font-weight: 600;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: 5px;
         transition: all 0.18s ease-out;
+        letter-spacing: 0.01em;
       }
 
       .ai-suggestion-btn.confirm {
-        border-color: rgba(34, 197, 94, 0.85);
-        background: radial-gradient(
-          circle at 0 0,
-          rgba(34, 197, 94, 0.32),
-          transparent 55%
-        );
+        border-color: rgba(34, 197, 94, 0.6);
+        background: rgba(34, 197, 94, 0.12);
+        color: #4ade80;
+      }
+
+      .ai-suggestion-btn.confirm:hover {
+        background: rgba(34, 197, 94, 0.22);
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
       }
 
       .ai-suggestion-btn.cancel {
-        opacity: 0.85;
+        opacity: 0.7;
+      }
+
+      .ai-suggestion-btn.cancel:hover {
+        opacity: 1;
+        background: rgba(255,255,255,0.08);
       }
 
       .ai-suggestion-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.55);
       }
 
       .chat-input-container {
@@ -5369,8 +5394,9 @@
         min-height: 0;
         display: flex;
         flex-direction: column;
-        padding: 8px 10px 12px;
+        padding: 8px 10px 0;
         background: color-mix(in srgb, var(--bg-card) 96%, transparent 4%);
+        overflow-y: auto;
       }
 
       .calendar-error {
@@ -5597,13 +5623,14 @@
       .month-grid {
         display: grid;
         grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 16px;
-        padding: 16px;
+        grid-auto-rows: minmax(90px, auto);
+        gap: 8px;
+        padding: 12px;
         background: var(--bg-card);
         border-radius: 10px;
         border: 1px solid var(--panel-border);
-        min-height: 540px;
         box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+        margin-bottom: 16px;
       }
 
       /* Modo claro: aumenta contraste da grade mensal (bordas do grid + cards do dia) */
@@ -5700,11 +5727,11 @@
         background: color-mix(in srgb, var(--bg-card) 98%, transparent 2%);
         border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 8px;
-        min-height: 128px;
-        padding: 12px;
+        min-height: 90px;
+        padding: 8px;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 4px;
         box-shadow: none;
         transition:
           background 0.18s ease,
@@ -5772,40 +5799,40 @@
         justify-content: space-between;
         align-items: center;
         font-weight: 600;
-        gap: 4px;
-        font-size: 0.95rem;
+        gap: 2px;
+        font-size: 0.8rem;
       }
 
       .month-day-name {
         color: var(--text-secondary);
-        font-size: 0.85rem;
+        font-size: 0.72rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.02em;
       }
 
       .month-day-number {
-        font-size: 1rem;
+        font-size: 0.85rem;
         font-weight: 750;
       }
 
       .month-task-list {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 3px;
       }
 
       .month-task {
-        border-radius: 8px;
-        padding: 6px 8px 6px 18px;
-        font-size: 0.9rem;
+        border-radius: 6px;
+        padding: 3px 6px 3px 14px;
+        font-size: 0.78rem;
         color: white;
         cursor: pointer;
         box-shadow: none;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: 6px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         background: color-mix(in srgb, var(--bg-card) 92%, transparent 8%);
         position: relative;
@@ -5895,12 +5922,12 @@
       }
 
       .month-task-time {
-        font-size: 0.8rem;
+        font-size: 0.72rem;
         opacity: 0.9;
       }
 
       .month-task-more {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         color: var(--text-secondary);
         cursor: pointer;
         transition: color 0.15s ease;
@@ -5918,17 +5945,7 @@
       }
 
       .month-task[data-status]::after {
-        content: attr(data-status);
-        position: absolute;
-        top: 6px;
-        right: 8px;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: lowercase;
-        padding: 2px 6px;
-        border-radius: 999px;
-        background: rgba(0, 0, 0, 0.2);
-        color: rgba(255, 255, 255, 0.9);
+        content: none;
       }
 
       .month-task.status-pending,
@@ -6457,6 +6474,25 @@
         padding: 24px;
         max-height: 60vh;
         overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: color-mix(in srgb, var(--border-color) 85%, transparent) transparent;
+      }
+
+      .modal-body::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .modal-body::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .modal-body::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--border-color) 88%, transparent);
+        border-radius: 999px;
+      }
+
+      .modal-body::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in srgb, var(--border-color) 100%, transparent);
       }
 
       .modal-field {
@@ -7118,7 +7154,7 @@
 
       /* Chart info tooltip */
       .cit-wrap { position:absolute; top:10px; right:12px; z-index:10; display:inline-flex; }
-      .cit-icon { width:18px; height:18px; border-radius:50%; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3); color:#6366f1; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; cursor:help; flex-shrink:0; transition:all .15s; user-select:none; }
+      .cit-icon { width:18px; height:18px; border-radius:50%; background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3); color:#6366f1; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center; cursor:default; flex-shrink:0; transition:all .15s; user-select:none; }
       .cit-icon:hover { background:#6366f1; color:#fff; }
       .cit-popup { position:absolute; top:calc(100% + 6px); right:0; width:265px; background:var(--bg-card); border:1px solid rgba(99,102,241,0.3); border-radius:10px; padding:10px 13px; font-size:11.5px; color:var(--text-primary); line-height:1.7; box-shadow:0 6px 24px rgba(0,0,0,0.18); z-index:200; display:none; pointer-events:none; }
       .cit-wrap:hover .cit-popup { display:block; }
@@ -7862,7 +7898,7 @@
               </h3>
               <div style="display:flex;gap:10px;align-items:center;font-size:11px;color:var(--text-secondary);">
                 <span id="forecastTrendBadge" style="padding:3px 10px;border-radius:20px;font-weight:600;"></span>
-                <span id="forecastR2Score" title="Coeficiente de determinação — quão bem o modelo linear se ajusta ao histórico" style="padding:3px 10px;border-radius:20px;font-weight:600;font-size:11px;display:none;cursor:help;"></span>
+                <span id="forecastR2Score" title="Coeficiente de determinação — quão bem o modelo linear se ajusta ao histórico" style="padding:3px 10px;border-radius:20px;font-weight:600;font-size:11px;display:none;cursor:default;"></span>
                 <span>Histórico: <b id="forecastHistDays">14</b>d &nbsp;|&nbsp; Horizonte: <b id="forecastHorizon">7</b>d</span>
               </div>
             </div>
@@ -12474,7 +12510,28 @@
 
         const navBlock = `=== SEÇÕES DO SITE (SpinOps) ===\n  - Dashboard: visão geral, KPIs, alertas críticos\n  - Agenda / Calendário: agenda diária (visão por horas), semanal e mensal de tarefas/OS\n  - Equipamentos: cadastro, saúde (%), histórico de manutenções, gráficos por equipamento\n  - Chat IA (você): assistente inteligente para qualquer dúvida sobre a plataforma\n  - Hábitos: rotinas recorrentes de manutenção\n  - Relatório IA: análise automática de equipamentos com diagnóstico e recomendações`;
 
-        return [taskBlock, equipBlock, maintBlock, navBlock].join('\n\n');
+        // Bloco de horários já ocupados — permite que a IA sempre sugira slots livres
+        let busyBlock = '=== HORÁRIOS OCUPADOS (agenda atual) ===';
+        try {
+          const scheduledTasks = list.filter(t => t && t.status === 'SCHEDULED' && t.startTime && t.endTime);
+          if (scheduledTasks.length === 0) {
+            busyBlock += '\n  (nenhum horário ocupado no momento, todos os slots estão livres)';
+          } else {
+            scheduledTasks
+              .slice().sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
+              .forEach(t => {
+                const s = new Date(t.startTime);
+                const e = new Date(t.endTime);
+                const dateStr = s.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const startH  = s.toTimeString().substring(0, 5);
+                const endH    = e.toTimeString().substring(0, 5);
+                busyBlock += `\n  - OCUPADO: ${dateStr} das ${startH} às ${endH} | "${t.title || '?'}"`;
+              });
+            busyBlock += '\n  IMPORTANTE: Ao sugerir horários, use apenas os slots que NÃO aparecem acima.';
+          }
+        } catch(e) { busyBlock += '\n  (erro ao ler horários)'; }
+
+        return [taskBlock, equipBlock, maintBlock, navBlock, busyBlock].join('\n\n');
       }
 
       async function sendMessageToExternalLLM({ userMessage, contextText }) {
@@ -13146,8 +13203,8 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         
         if (sender === 'ai' && typeof text === 'string') {
           let finalText;
-          if (/JSON_ACTION:/i.test(text)) {
-            const beforeJson = text.replace(/JSON_ACTION:[\s\S]*/i, '').trim();
+          if (/JSON_ACTION[\s:]/i.test(text)) {
+            const beforeJson = text.replace(/JSON_ACTION[\s\S]*/i, '').trim();
             finalText = stripEmoji(beforeJson) || 'OS estruturada. Confirme os dados abaixo.';
           } else {
             finalText = formatAIMarkdown(stripEmoji(
@@ -13552,27 +13609,27 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
           <div class="ai-suggestion-card ${
             isConflict ? "ai-suggestion-card--conflict" : ""
           }" id="${cardId}">
-            <div class="ai-suggestion-title">${
-              isConflict
-                ? "Conflito de horário detectado"
-                : "Nova OS sugerida pela SpinIA"
-            }</div>
-            <div class="ai-suggestion-body">
-              <div class="ai-suggestion-priority-tag priority-${priorityLevel.toLowerCase()}">
-                ${escapeHtml(priorityLabel)}
-              </div>
-              <div class="ai-suggestion-task">${escapeHtml(title)}</div>
-              <div class="ai-suggestion-time">${
+            <div class="ai-suggestion-card-inner">
+              <div class="ai-suggestion-title">${
                 isConflict
-                  ? `Horário ocupado! Deseja agendar para às ${escapeHtml(
-                      prettyTime,
-                    )}?`
-                  : escapeHtml(prettyTime)
+                  ? "⚠ Conflito de horário"
+                  : "Nova OS sugerida pela SpinIA"
               }</div>
-            </div>
-            <div class="ai-suggestion-actions">
-              <button class="ai-suggestion-btn confirm">✅ Confirmar agora</button>
-              <button class="ai-suggestion-btn cancel">❌ Ignorar</button>
+              <div class="ai-suggestion-body">
+                <div class="ai-suggestion-priority-tag priority-${priorityLevel.toLowerCase()}">
+                  ${escapeHtml(priorityLabel)}
+                </div>
+                <div class="ai-suggestion-task">${escapeHtml(title)}</div>
+                <div class="ai-suggestion-time">${
+                  isConflict
+                    ? `Horário ocupado! Deseja agendar para às ${escapeHtml(prettyTime)}?`
+                    : escapeHtml(prettyTime)
+                }</div>
+              </div>
+              <div class="ai-suggestion-actions">
+                <button class="ai-suggestion-btn confirm">Confirmar agora</button>
+                <button class="ai-suggestion-btn cancel">Ignorar</button>
+              </div>
             </div>
           </div>
         `;
@@ -13922,12 +13979,34 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
             });
 
             const lower = (errText || "").toLowerCase();
-            if (response.status === 400 && /conflit/.test(lower)) {
-              addChatMessage(
-                "ai",
-                "⚠️ O backend barrou esse horário por conflito de agenda. Tente outro horário ou ajuste suas tarefas existentes.",
-              );
-              showToast("Conflito de horário detectado", "error");
+
+            // Conflito de horário — backend retornou 409 com sugestão automática
+            if (response.status === 409 || (response.status === 400 && /conflit/.test(lower))) {
+              const conflict = errorData || {};
+              const conflictingName = conflict.conflictingTask || 'tarefa existente';
+
+              if (conflict.suggestedStart && conflict.suggestedEnd) {
+                const fmtTime = iso => {
+                  const d = new Date(iso);
+                  return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                };
+                const sugMsg = `Esse horário já está ocupado por "${conflictingName}". Sugestão automática: ${fmtTime(conflict.suggestedStart)}–${fmtTime(conflict.suggestedEnd)} no mesmo dia.`;
+                addChatMessage('ai', sugMsg);
+
+                // Renderiza novo card JSON_ACTION com o horário sugerido
+                const suggestedAction = {
+                  type: 'create',
+                  title: action.title || action.titulo || payload.title,
+                  priority: action.priority || action.prioridade || payload.priority || 'MEDIUM',
+                  start: conflict.suggestedStart,
+                  end:   conflict.suggestedEnd,
+                  description: payload.description || ''
+                };
+                renderJsonActionCard(suggestedAction);
+              } else {
+                addChatMessage('ai', `Esse horário está ocupado por "${conflictingName}". Escolha outro horário ou peça uma sugestão ao assistente.`);
+                showToast('Conflito de horário', 'error');
+              }
               return;
             }
 
@@ -18498,8 +18577,7 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
         const barColors = [];
 
         catalog.forEach(equip => {
-          const aiHealth = equip.saude_percentual;
-          const health = (typeof aiHealth === 'number') ? aiHealth : computeEquipmentHealth(equip, tasks).health;
+          const health = computeEquipmentHealth({ ...equip, baseHealth: equip.saude_percentual ?? 80 }, tasks).health;
           labels.push(equip.name.length > 18 ? equip.name.substring(0, 16) + '…' : equip.name);
           healthValues.push(health);
           barColors.push(health >= 70 ? '#10b981' : health >= 40 ? '#f59e0b' : '#ef4444');
@@ -19582,7 +19660,27 @@ IMPORTANTE: O contexto abaixo contém os dados REAIS do sistema. Use-os para res
       let _elbowChartInstance = null;
 
       function _kMeans(points, k, iterations) {
-        let centroids = points.slice(0, k).map(p => [...p]);
+        // K-Means++ initialization: first centroid aleatório, os demais via distância ponderada
+        const chosen = new Set();
+        const firstIdx = Math.floor(Math.random() * points.length);
+        chosen.add(firstIdx);
+        let centroids = [[ ...points[firstIdx] ]];
+        while (centroids.length < k) {
+          const dists = points.map((pt, i) => {
+            if (chosen.has(i)) return 0;
+            const minD = centroids.reduce((m, c) => {
+              const d = pt.reduce((s, v, dim) => s + (v - c[dim]) ** 2, 0);
+              return Math.min(m, d);
+            }, Infinity);
+            return minD;
+          });
+          const total = dists.reduce((s, d) => s + d, 0);
+          let rnd = Math.random() * total;
+          let pick = 0;
+          for (let i = 0; i < dists.length; i++) { rnd -= dists[i]; if (rnd <= 0) { pick = i; break; } }
+          chosen.add(pick);
+          centroids.push([ ...points[pick] ]);
+        }
         let assignments = new Array(points.length).fill(0);
         for (let iter = 0; iter < iterations; iter++) {
           for (let i = 0; i < points.length; i++) {
@@ -21130,7 +21228,9 @@ Responda APENAS com JSON válido, sem markdown, sem texto extra:
             let saudePct = Math.max(0, Math.min(100, Number(parsed.saude_percentual) || 50));
             if (allDates.length === 0 && saudePct > 90) saudePct = 90;                    // nunca mantido: cap 90%
             if (Number(preRatio) >= 1 && saudePct > 75) saudePct = 75;                    // vencido: cap 75%
-            if (daysSinceMaint !== null && daysSinceMaint <= 0) saudePct = Math.max(90, saudePct); // hoje: mín 90%
+            if (daysSinceMaint !== null && daysSinceMaint <= 0)  saudePct = Math.max(90, saudePct); // hoje: mín 90%
+            if (daysSinceMaint !== null && daysSinceMaint <= 7)  saudePct = Math.max(85, saudePct); // ≤7 dias: mín 85%
+            if (daysSinceMaint !== null && daysSinceMaint <= 30) saudePct = Math.max(75, saudePct); // ≤30 dias: mín 75%
             const riscoCoerente = saudePct >= 80 ? 'BAIXO' : saudePct >= 60 ? 'MÉDIO' : saudePct >= 40 ? 'ALTO' : 'CRÍTICO';
             return {
               saude_percentual: saudePct,
@@ -21173,7 +21273,12 @@ Responda APENAS com JSON válido, sem markdown, sem texto extra:
         if (lastMaintDate) {
           const daysSince = Math.floor((Date.now() - new Date(lastMaintDate).getTime()) / 86400000);
           if (daysSince <= 0) {
-            health = Math.max(health, 95);
+            health = Math.max(health, 95);          // hoje: excelente
+          } else if (daysSince <= 7) {
+            health = Math.max(health, 90);          // ≤1 semana: ótimo
+          } else if (daysSince <= 30) {
+            health = Math.max(health - 0, health);  // ≤30 dias: sem penalidade
+            health = Math.max(health, 80);          // mínimo garantído de 80%
           } else {
             const ratio = daysSince / expectedInterval; // 0 = recém-feita, 1 = no limite, >1 = vencida
             if (ratio >= 3)       health -= 40;   // muito atrasada
@@ -21341,9 +21446,8 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
  
         let okCount = 0, warnCount = 0, critCount = 0;
         const cards = catalog.map(equip => {
-          const aiHealth = equip.saude_percentual;
-          const s = computeEquipmentHealth(equip, tasks);
-          const finalHealth = (typeof aiHealth === 'number') ? aiHealth : s.health;
+          const s = computeEquipmentHealth({ ...equip, baseHealth: equip.saude_percentual ?? 80 }, tasks);
+          const finalHealth = s.health;
           const c = equipHealthColor(finalHealth);
           if (c.badge === 'ok') okCount++;
           else if (c.badge === 'warn') warnCount++;
@@ -21364,10 +21468,7 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
           const icon = sensorIcons[equip.type] || '📦';
  
           const usageInfo = equip.usageMonths ? `${equip.usageMonths} meses` : '—';
-          const _aiHealth = typeof equip.saude_percentual === 'number' ? equip.saude_percentual : finalHealth;
-          const condInfo = typeof equip.saude_percentual === 'number'
-            ? (_aiHealth >= 80 ? 'Boa (IA)' : _aiHealth >= 60 ? 'Regular (IA)' : _aiHealth >= 40 ? 'Risco Alto (IA)' : 'Crítico (IA)')
-            : (equip.condition === 'boa' ? 'Boa' : equip.condition === 'desgaste' ? 'Desgaste' : equip.condition === 'danificado' ? 'Danificado' : '—');
+          const condInfo = finalHealth >= 80 ? 'Boa' : finalHealth >= 60 ? 'Regular' : finalHealth >= 40 ? 'Risco Alto' : 'Crítico';
           const _mLog = getMaintLog ? getMaintLog() : {};
           const _logDays = (_mLog[equip.id] || []).sort();
           const lastMaintInfo = _logDays.length > 0
@@ -21400,7 +21501,7 @@ EQUIPAMENTOS CADASTRADOS: ${equipSummary}`;
             </div>
             <div style="display:flex; align-items:flex-end; gap:8px; margin-bottom:8px;">
               <div class="equip-score" style="color:${c.text}">${finalHealth}%</div>
-              <div style="font-size:12px; color:var(--text-secondary); padding-bottom:5px;">Saúde${typeof equip.saude_percentual === 'number' ? ' (IA)' : ''}</div>
+              <div style="font-size:12px; color:var(--text-secondary); padding-bottom:5px;">Saúde</div>
             </div>
             <div class="equip-bar-wrap">
               <div class="equip-bar" style="width:${finalHealth}%; background:${c.bar};"></div>

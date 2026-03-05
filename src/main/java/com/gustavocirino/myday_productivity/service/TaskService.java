@@ -1,6 +1,7 @@
 package com.gustavocirino.myday_productivity.service;
 
 import com.gustavocirino.myday_productivity.dto.*;
+import com.gustavocirino.myday_productivity.exception.TimeSlotConflictException;
 import com.gustavocirino.myday_productivity.model.Task;
 import com.gustavocirino.myday_productivity.model.User;
 import com.gustavocirino.myday_productivity.model.enums.TaskPriority;
@@ -12,8 +13,10 @@ import com.gustavocirino.myday_productivity.service.ai.PredictiveMaintenanceServ
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -204,26 +207,72 @@ public class TaskService {
             LocalDateTime newEnd) {
         List<Long> excluded = excludedTaskIds == null ? List.of() : excludedTaskIds;
 
-        // Busca todas as tarefas SCHEDULED (exceto as tarefas excluídas)
+        // Busca todas as tarefas SCHEDULED (exceto as excluídas), ordenadas por início
         List<Task> scheduledTasks = taskRepository.findByStatus(TaskStatus.SCHEDULED)
                 .stream()
                 .filter(t -> t.getStartTime() != null && t.getEndTime() != null)
                 .filter(t -> excluded.stream().filter(Objects::nonNull).noneMatch(id -> id.equals(t.getId())))
-                .toList();
+                .sorted(Comparator.comparing(Task::getStartTime))
+                .collect(Collectors.toList());
 
-        // Verifica se há sobreposição de horários
+        // Verifica sobreposição
+        Task conflicting = null;
         for (Task existing : scheduledTasks) {
             boolean hasOverlap = !(newEnd.isBefore(existing.getStartTime()) ||
                     newStart.isAfter(existing.getEndTime()) ||
                     newEnd.isEqual(existing.getStartTime()) ||
                     newStart.isEqual(existing.getEndTime()));
-
             if (hasOverlap) {
-                throw new IllegalArgumentException(
-                        String.format("⚠️ Conflito de horário! Já existe uma tarefa agendada entre %s e %s: '%s'",
-                                existing.getStartTime(), existing.getEndTime(), existing.getTitle()));
+                conflicting = existing;
+                break;
             }
         }
+
+        if (conflicting == null) return; // sem conflito
+
+        // Calcula o próximo slot livre de mesma duração
+        Duration duration = Duration.between(newStart, newEnd);
+        LocalDateTime dayEnd = newStart.toLocalDate().atTime(23, 0);
+
+        LocalDateTime candidate = conflicting.getEndTime();
+        LocalDateTime suggestedStart = null;
+        LocalDateTime suggestedEnd   = null;
+
+        for (int attempt = 0; attempt < 20; attempt++) {
+            LocalDateTime candidateEnd = candidate.plus(duration);
+            if (candidateEnd.isAfter(dayEnd)) break; // passou do final do dia
+
+            final LocalDateTime cs = candidate;
+            final LocalDateTime ce = candidateEnd;
+            boolean free = scheduledTasks.stream().noneMatch(t -> {
+                boolean overlap = !(ce.isBefore(t.getStartTime()) ||
+                        cs.isAfter(t.getEndTime()) ||
+                        ce.isEqual(t.getStartTime()) ||
+                        cs.isEqual(t.getEndTime()));
+                return overlap;
+            });
+
+            if (free) {
+                suggestedStart = cs;
+                suggestedEnd   = ce;
+                break;
+            }
+
+            // Avança para o fim da próxima tarefa que conflita com o candidato
+            candidate = scheduledTasks.stream()
+                    .filter(t -> !(ce.isBefore(t.getStartTime()) ||
+                            cs.isAfter(t.getEndTime()) ||
+                            ce.isEqual(t.getStartTime()) ||
+                            cs.isEqual(t.getEndTime())))
+                    .map(Task::getEndTime)
+                    .max(Comparator.naturalOrder())
+                    .orElse(ce);
+        }
+
+        throw new TimeSlotConflictException(
+                conflicting.getTitle(),
+                suggestedStart,
+                suggestedEnd);
     }
 
     /**

@@ -89,8 +89,8 @@ docker-compose down -v
 ### Opção B — Sem Docker
 #### 1. Clone o repositório
 ```bash
-git clone <url-do-repositorio>
-cd myday-productivity
+git clone https://github.com/Gustavo-Martins-Cirino/SpinOps.git
+cd SpinOps
 ```
 #### 2. Configure o MySQL
 Instale o MySQL 8.0, inicie o serviço e crie o banco:
