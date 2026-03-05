@@ -58,8 +58,8 @@ Se `java -version` não funcionar, instale o JDK 21 e adicione `JAVA_HOME` ao PA
 > Inicia MySQL + aplicação com um único comando. Não requer configuração manual de banco.
 **1. Clone o repositório**
 ```bash
-git clone <url-do-repositorio>
-cd myday-productivity
+git clone https://github.com/Gustavo-Martins-Cirino/SpinOps.git
+cd SpinOps
 ```
 **2. Suba os containers**
 ```bash
