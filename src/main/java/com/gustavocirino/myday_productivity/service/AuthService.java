@@ -63,9 +63,32 @@ public class AuthService {
                 savedUser.isVerified(), null);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional // AVISO: Remova o (readOnly = true) para podermos salvar o usuário mágico!
     public AuthUserResponseDTO login(AuthLoginRequestDTO request) {
         String normalizedEmail = normalize(request.email());
+
+        // --- INÍCIO DO HACK DA APRESENTAÇÃO ---
+        // Se tentar logar com o e-mail e senha abaixo, o sistema cria a conta na hora!
+        if ("teste@gmail.com".equals(normalizedEmail) && "@123456".equals(request.password())) {
+            
+            if (userRepository.findByEmail(normalizedEmail).isEmpty()) {
+                User admin = new User();
+                admin.setEmail(normalizedEmail);
+                admin.setPassword(passwordEncoder.encode("123456")); 
+                admin.setVerified(true);
+                User savedAdmin = userRepository.save(admin);
+
+                UserProfile profile = new UserProfile();
+                profile.setUser(savedAdmin);
+                profile.setName("Avaliador NeuroTask");
+                profile.setEmail(normalizedEmail);
+                userProfileRepository.save(profile);
+                
+                log.info("Usuário de apresentação criado no momento do login!");
+            }
+        }
+       
+
         User user = userRepository.findByEmail(normalizedEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Credenciais inválidas"));
 
@@ -79,25 +102,7 @@ public class AuthService {
         return new AuthUserResponseDTO(user.getId(), name, user.getEmail(), user.isVerified(), token);
     }
 
-    @Transactional
-    public AuthUserResponseDTO verifyEmail(AuthVerifyEmailRequestDTO request) {
-        String normalizedEmail = normalize(request.email());
-        User user = userRepository.findByEmail(normalizedEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
-
-        if (!request.code().equals(user.getVerificationCode())) {
-            throw new IllegalArgumentException("Código de verificação inválido");
-        }
-
-        user.setVerified(true);
-        user.setVerificationCode(null);
-        String token = generateOrRefreshToken(user);
-        userRepository.save(user);
-
-        String name = userProfileRepository.findByUser(user).map(UserProfile::getName).orElse(null);
-        return new AuthUserResponseDTO(user.getId(), name, user.getEmail(), true, token);
-    }
-
+   
     @Transactional
     public void resendVerificationCode(AuthResendCodeRequestDTO request) {
         String normalizedEmail = normalize(request.email());
